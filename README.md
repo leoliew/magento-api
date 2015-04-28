@@ -3,8 +3,6 @@ magento-android-web-api
 
 This is a small module that adds the ability to remotely work with the Magento via the REST API
 
-More detail  http://app-z.net
-
 
 Install<br>
 
@@ -23,8 +21,6 @@ Examples of use
 
 * /web-api.php?route=feed/web_api/random&limit=4&key=key1
   Return Random Products list
-
-
 
 
 
