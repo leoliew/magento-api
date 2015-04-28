@@ -16,7 +16,7 @@ define('WEB_API_KEY', 'key1');
 
 
 
-require_once('./app/Mage.php');
+require_once('../app/Mage.php');
 Mage::app();
 
 
