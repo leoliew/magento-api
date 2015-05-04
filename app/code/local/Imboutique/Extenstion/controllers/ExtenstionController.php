@@ -11,6 +11,7 @@ class Imboutique_Extenstion_ExtenstionController extends Mage_Core_Controller_Fr
         echo "Hello World;";
     }
     public function showworldAction() {
-        echo "Welcome to Magento World;";
+        $this->loadLayout();
+        $this->renderLayout();
     }
 }
