@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<frontend>
+    <routers>
+        <extenstion>
+            <use>standard</use>
+            <args>
+                <module>Imboutique_Extenstion</module>
+                <frontName>extenstion</frontName>
+            </args>
+        </extenstion>
+    </routers>
+</frontend>
