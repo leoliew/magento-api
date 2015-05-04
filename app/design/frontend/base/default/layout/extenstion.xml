@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <extenstion_extenstion_showworld>
+        <reference name="root">
+            <action
+                    method="setTemplate"><template>page/2columns-right.phtml</template></action>
+        </reference>
+    </extenstion_extenstion_showworld>
+</layout>

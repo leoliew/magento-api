@@ -9,4 +9,11 @@
             </args>
         </extenstion>
     </routers>
+    <layout>
+        <updates>
+            <extenstion>
+                <file>extenstion.xml</file>
+            </extenstion>
+        </updates>
+    </layout>
 </frontend>
