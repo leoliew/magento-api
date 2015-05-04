@@ -1,5 +1,5 @@
+
 magento-android-web-api
-=======================
 
 This is a small module that adds the ability to remotely work with the Magento via the REST API
 
@@ -28,3 +28,8 @@ License
 -------
 
 This software is distributed under the [GNU GPL V3](http://www.gnu.org/licenses/gpl.html) License.
+
+# magento-web-api
+Magento REST API
+
+
