@@ -15,14 +15,22 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 		if (Mage::getSingleton ( 'customer/session' )->isLoggedIn ()) {
 			$customer = Mage::getSingleton ( 'customer/session' )->getCustomer ();
 			$customerinfo = array (
+				'code' => 0,
+				'msg' => null,
+				'model' => array( 
 					'name' => $customer->getName (),
 					'email' => $customer->getEmail (),
 					'avatar' => $customer->getMyAvatar (),
 					'tel' => $customer->getDefaultMobileNumber () 
+				)
 			);
 			echo json_encode ( $customerinfo );
 		} else
-			echo 'false';
+			echo json_encode(array(
+				'code' => 1,
+				'msg' => 'not user login',
+				'model'=>array () 
+			));
 	}
 	public function loginAction() {
 		$session = Mage::getSingleton ( 'customer/session' );
@@ -43,22 +51,25 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 					$value = Mage::helper ( 'customer' )->getEmailConfirmationUrl ( $uname );
 					$message = Mage::helper ( 'customer' )->__ ( 'This account is not confirmed. <a href="%s">Click here</a> to resend confirmation email.', $value );
 					echo json_encode ( array (
-							'code' => $e->getCode (),
-							'message' => $message 
+							'code' => 1,
+							'msg' => $message,
+							'model'=>array () 
 					) );
 					break;
 				case Mage_Customer_Model_Customer::EXCEPTION_INVALID_EMAIL_OR_PASSWORD :
 					$message = $e->getMessage ();
 					echo json_encode ( array (
-							'code' => $e->getCode (),
-							'message' => $message 
+							'code' => 1,
+							'msg' => $message,
+							'model'=>array () 
 					) );
 					break;
 				default :
 					$message = $e->getMessage ();
 					echo json_encode ( array (
-							'code' => $e->getCode (),
-							'message' => $message 
+							'code' => 1,
+							'msg' => $message,
+							'model'=>array () 
 					) );
 			}
 		}
@@ -107,15 +118,15 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 				}
 				
 				echo json_encode ( array (
-						true,
-						'0x0000',
-						array () 
+						'code'=>0,
+						'msg'=>null,
+						'model'=>array () 
 				) );
 			} else {
 				echo json_encode ( array (
-						false,
-						'0x1000',
-						$errors 
+						'code'=>1,
+						'msg'=>$errors,
+						'model'=>array () 
 				) );
 			}
 		} catch ( Mage_Core_Exception $e ) {
@@ -127,17 +138,16 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 				$message = $e->getMessage ();
 			}
 			echo json_encode ( array (
-					false,
-					'0x1000',
-					array (
-							$message 
-					) 
+					'code'=>1,
+					'msg'=>$message,
+					'model'=>array ()
 			) );
 		} catch ( Exception $e ) {
 			echo json_encode ( array (
-					false,
-					'0x1000',
-					$e->getMessage () 
+					'code'=>1,
+					'msg'=>$e->getMessage (),
+					'model'=>array ()
+					 
 			) );
 		}
 	}
@@ -154,21 +164,23 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 					'customer' => $customer 
 			), $storeId );
 			echo json_encode ( array (
-					'code' => '0x0000',
-					'message' => 'Request has sent to your Email.'
+					'code' => 0,
+					'message' => 'Request has sent to your Email.',
+					'model'=>array()
 			) );
 		} else
 			echo json_encode ( array (
-					'code' => '0x0001',
-					'message' => 'No matched email data.' 
+					'code' => 1,
+					'message' => 'No matched email data.' ,
+					'model'=>array()
 			) );
 	}
 	public function logoutAction() {
 		try {
 			Mage::getSingleton ( 'customer/session' )->logout();
-			echo json_encode(array(true, '0x0000', null));
+			echo json_encode(array('code'=>0, 'msg'=>null, 'model'=>array()));
 		} catch (Exception $e) {
-			echo json_encode(array(false, '0x1000', $e->getMessage()));
+			echo json_encode(array('code'=>0, 'msg'=>$e->getMessage(), 'model'=>array()));
 		}
 	}
 	protected function _user_isexists($email) {
@@ -176,9 +188,9 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 		$customer = Mage::getModel ( 'customer/customer' )->setWebsiteId ( Mage::app ()->getStore ()->getWebsiteId () )->loadByEmail ( $email );
 		$info ['uname_is_exist'] = $customer->getId () > 0;
 		$result = array (
-				true,
-				'0x0000',
-				$info 
+				'code' => 0,
+				'message' => $info,
+				'model'=>array()
 		);
 		return $customer->getId () > 0;
 	}
