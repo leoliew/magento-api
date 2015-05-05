@@ -1,14 +1,8 @@
 <?php
-// define('MAGENTO_PLUGIN_VERSION', 'v1.2.3');
-// define('KANCART_APP_KEY', Mage::getStoreConfig('Kancart/Kancart_group/Kancart_appkey', Mage::app()->getStore()));
-// define('KANCART_APP_SECRECT', Mage::getStoreConfig('Kancart/Kancart_group/Kancart_appsecrect', Mage::app()->getStore()));
-// if (Mage::getStoreConfig('Kancart/Kancart_group/Kancart_PaymentEnv', Mage::app()->getStore()) == 1)
-//     define('PAYPAL_ENVIRONMENT', 'live');
-// else
-//     define('PAYPAL_ENVIRONMENT', 'sandbox');
 
-
-
+/**
+ * Class Lading_Api_IndexController
+ */
 class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 	public function indexAction() {
 

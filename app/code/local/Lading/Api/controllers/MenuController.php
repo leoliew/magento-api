@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Lading_Api_MenuController
+ */
 class Lading_Api_MenuController extends Mage_Core_Controller_Front_Action {
 
 	public function suggestAction() {

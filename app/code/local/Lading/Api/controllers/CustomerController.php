@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Class Lading_Api_CustomerController
+ */
 class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 	const XML_PATH_REGISTER_EMAIL_TEMPLATE = 'customer/create_account/email_template';
 	const XML_PATH_REGISTER_EMAIL_IDENTITY = 'customer/create_account/email_identity';
@@ -49,7 +53,7 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 			switch ($e->getCode ()) {
 				case Mage_Customer_Model_Customer::EXCEPTION_EMAIL_NOT_CONFIRMED :
 					$value = Mage::helper ( 'customer' )->getEmailConfirmationUrl ( $uname );
-					$message = Mage::helper ( 'customer' )->__ ( 'This account is not confirmed. <a href="%s">Click here</a> to resend confirmation email.', $value );
+					$message = Mage::helper ( 'customer' )->__ ( 'This account is not confirmed. %s', $value );
 					echo json_encode ( array (
 							'code' => 1,
 							'msg' => $message,
@@ -132,7 +136,7 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 		} catch ( Mage_Core_Exception $e ) {
 			if ($e->getCode () === Mage_Customer_Model_Customer::EXCEPTION_EMAIL_EXISTS) {
 				$url = Mage::getUrl ( 'customer/account/forgotpassword' );
-				$message = $this->__ ( 'There is already an account with this email address. If you are sure that it is your email address, <a href="%s">click here</a> to get your password and access your account.', $url );
+				$message = $this->__ ( 'There is already an account with this email address. If you are sure that it is your email address, %s', $url );
 				$session->setEscapeMessages ( false );
 			} else {
 				$message = $e->getMessage ();

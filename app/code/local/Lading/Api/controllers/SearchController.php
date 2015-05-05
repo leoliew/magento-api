@@ -1,11 +1,8 @@
 <?php
 
 /**
-
- * Catalog Search Controller
-
+ * Class Lading_Api_SearchController
  */
-
 class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 
 	protected function _getSession() {

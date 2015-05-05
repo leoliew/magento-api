@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Lading_Api_ProductsController
+ */
 class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 	public function getcustomoptionAction() {
