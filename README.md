@@ -22,17 +22,10 @@ or download package manually:
 
 ##Examples of use
 
-* /web-api.php?route=feed/web_api/categories&parent=0&level=2&key=key1
-  Return Categories tree information
+  * user login
 
-* /web-api.php?route=feed/web_api/products&category=4&key=key1
-  Return Products list in category
-
-* /web-api.php?route=feed/web_api/product&id=800&key=key1
-  Return product item
-
-* /web-api.php?route=feed/web_api/random&limit=4&key=key1
-  Return Random Products list
+        GET /mobileapi/customer/login?username=username&password=password
+            Return Login user information
 
 
 License
