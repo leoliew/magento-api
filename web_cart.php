@@ -39,12 +39,6 @@ if ( !isset($key) || $key != WEB_API_KEY ) {
 }
 
 
-//
-function startSession(){
-    session_start();
-    Mage::getSingleton('customer/session')->start();
-}
-startSession();
 /**
  * @method frontEndSession
  * @return void

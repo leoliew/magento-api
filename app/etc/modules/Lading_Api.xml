@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Lading_Api>   
+			<active>true</active>                  
+			<codePool>local</codePool>     
+		</Lading_Api>  
+	</modules>
+</config> 
