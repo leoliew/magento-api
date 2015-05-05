@@ -1,5 +1,5 @@
 <?php
-class SkyMazon_RestConnect_CartController extends Mage_Core_Controller_Front_Action {
+class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 	public function addAction() {
 		try {
 			$product_id = $this->getRequest ()->getParam ( 'product' );

@@ -1,6 +1,6 @@
 <?php
 
-class SkyMazon_RestConnect_CartsController extends Mage_Core_Controller_Front_Action {
+class Lading_Api_CartsController extends Mage_Core_Controller_Front_Action {
 
 	public function test1Action() {
 
