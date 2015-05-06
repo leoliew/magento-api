@@ -89,7 +89,7 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 		}
 
-		echo json_encode ( $select );
+		echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$select) );
 
 	}
 
@@ -138,7 +138,7 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 			)
 		);
 
-		echo json_encode ( $productdetail );
+		echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productdetail) );
 
 	}
 

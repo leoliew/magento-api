@@ -32,31 +32,37 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 			$session->setCartWasUpdated ( true );
 			$cart->save ();
 			$items_qty = floor ( Mage::getModel ( 'checkout/cart' )->getQuote ()->getItemsQty () );
-			$result = '{"result":"success"';
-			$result .= ', "items_qty": "' . $items_qty . '"}';
-			echo $result;
+			$result = array("code"=>0, "msg"=> null, "model"=>array("items_qty"=>$items_qty));
+			echo json_encode($result);
 		} catch ( Exception $e ) {
-			$result = '{"result":"error"';
-			$result .= ', "message": "' . $e->getMessage () . '"}';
-			echo $result;
+			$result = array("code"=>0, "msg"=>$e->getMessage () , "model"=>null);
+			echo json_encode($result);
 		}
 	}
 	public function getCartInfoAction() {
-		$cart = Mage::getSingleton ( 'checkout/cart' );
-		if ($cart->getQuote ()->getItemsCount ()) {
-			$cart->init ();
-			$cart->save ();
-		}
-		$cart->getQuote ()->collectTotals ()->save ();
-		$cartInfo = array ();
-		$cartInfo ['is_virtual'] = Mage::helper ( 'checkout/cart' )->getIsVirtualQuote ();
-		$cartInfo ['cart_items'] = $this->_getCartItems ();
-		$cartInfo ['messages'] = sizeof ( $this->errors ) ? $this->errors : $this->_getMessage ();
-		$cartInfo ['cart_items_count'] = Mage::helper ( 'checkout/cart' )->getSummaryCount ();
-		$cartInfo ['payment_methods'] = $this->_getPaymentInfo ();
-		$cartInfo ['allow_guest_checkout'] = Mage::helper ( 'checkout' )->isAllowedGuestCheckout ( $cart->getQuote () );
-		
-		echo json_encode ($cartInfo); 
+		if(Mage::getSingleton ( 'customer/session' )->isLoggedIn ()){
+			$cart = Mage::getSingleton ( 'checkout/cart' );
+			if ($cart->getQuote ()->getItemsCount ()) {
+				$cart->init ();
+				$cart->save ();
+			}
+			$cart->getQuote ()->collectTotals ()->save ();
+			$cartInfo = array ();
+			$cartInfo ['is_virtual'] = Mage::helper ( 'checkout/cart' )->getIsVirtualQuote ();
+			$cartInfo ['cart_items'] = $this->_getCartItems ();
+			$cartInfo ['messages'] = sizeof ( $this->errors ) ? $this->errors : $this->_getMessage ();
+			$cartInfo ['cart_items_count'] = Mage::helper ( 'checkout/cart' )->getSummaryCount ();
+			$cartInfo ['payment_methods'] = $this->_getPaymentInfo ();
+			$cartInfo ['allow_guest_checkout'] = Mage::helper ( 'checkout' )->isAllowedGuestCheckout ( $cart->getQuote () );
+			
+			echo json_encode (array('code'=>0, 'msg'=>null, 'model'=>$cartInfo));
+		}else{
+			echo json_encode(array(
+				'code' => 1,
+				'msg' => 'not user login',
+				'model'=>array () 
+			));
+		} 
 	
 	}
 	public function _getMessage() {
@@ -165,9 +171,18 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 		return $result;
 	}
 	public function getQtyAction() {
-		$items_qty = floor ( Mage::getModel ( 'checkout/cart' )->getQuote ()->getItemsQty () );
-		$result = '{"items_qty": "' . $items_qty . '"}';
-		echo $result;
+		if(Mage::getSingleton ( 'customer/session' )->isLoggedIn ()){
+
+			$items_qty = floor ( Mage::getModel ( 'checkout/cart' )->getQuote ()->getItemsQty () );
+
+			echo json_encode(array('code'=>0, 'msg'=>null, 'model'=>array('num'=>$items_qty)) );
+		}else{
+			echo json_encode(array(
+				'code' => 1,
+				'msg' => 'not user login',
+				'model'=>array () 
+			));
+		}
 	}
 	public function test1Action() {
 		$cart = $this->_getCart ();

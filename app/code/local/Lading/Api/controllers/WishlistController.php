@@ -7,49 +7,57 @@
  */
 
 class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
-
     public function getAction() {
-        echo "hello world";
+        $customer = Mage::getSingleton('customer/session')->getCustomer();
+        $wishList = Mage::getSingleton('wishlist/wishlist')->loadByCustomer($customer);
+        $baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
+        $currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
+        $wishListItemCollection = $wishList->getItemCollection();
+        if (count($wishListItemCollection)) {
+            $arrProductIds = array();
+            foreach ($wishListItemCollection as $item) {
+                $product = $item->getProduct();
+                $productid = $product->getId ();
+                $product = Mage::getModel ("catalog/product")->load ($productid);
+                $arrProductIds [] = array (
+                    'entity_id' => $product->getId (),
+                    'sku' => $product->getSku (),
+                    'name' => $product->getName (),
+                    'news_from_date' => $product->getNewsFromDate (),
+                    'news_to_date' => $product->getNewsToDate (),
+                    'special_from_date' => $product->getSpecialFromDate (),
+                    'special_to_date' => $product->getSpecialToDate (),
+                    'image_url' => $product->getImageUrl (),
+                    'url_key' => $product->getProductUrl (),
+                    'regular_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+                    'final_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+                    'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol()
+                );
+            }
+        };
+        $customerinfo = array (
+            'code' => 0,
+            'msg' => "get " .count($arrProductIds). " items success!",
+            'model' => array(
+                'products' => $arrProductIds,
+                'count' => count($arrProductIds)
+            )
+        );
+        echo json_encode($customerinfo);
     }
 
 
     public function addAction() {
-        try {
-            $product_id = $this->getRequest ()->getParam ( 'product' );
-            $params = $this->getRequest ()->getParams ();
-            if (isset ( $params ['qty'] )) {
-                $filter = new Zend_Filter_LocalizedToNormalized ( array (
-                    'locale' => Mage::app ()->getLocale ()->getLocaleCode ()
-                ) );
-                $params ['qty'] = $filter->filter ( $params ['qty'] );
-            } else
-                // $params ['qty'] = 1; // 调试直接设为1
-                // $param=$this->getRequest ()->getParam ( 'param' );
-                // $qty = $this->getRequest ()->getParam ( 'qty' );
-                if ($product_id == '') {
-                    $session->addError ( "Product Not Added
-					The SKU you entered ($sku) was not found." );
-                }
-            $request = Mage::app ()->getRequest ();
-            $product = Mage::getModel ( 'catalog/product' )->load ( $product_id );
-            $session = Mage::getSingleton ( 'core/session', array (
-                'name' => 'frontend'
-            ) );
-            $cart = Mage::helper ( 'checkout/cart' )->getCart ();
-            // $cart->addProduct ( $product, $qty );
-            $cart->addProduct ( $product, $params );
-            $session->setLastAddedProductId ( $product->getId () );
-            $session->setCartWasUpdated ( true );
-            $cart->save ();
-            $items_qty = floor ( Mage::getModel ( 'checkout/cart' )->getQuote ()->getItemsQty () );
-            $result = '{"result":"success"';
-            $result .= ', "items_qty": "' . $items_qty . '"}';
-            echo $result;
-        } catch ( Exception $e ) {
-            $result = '{"result":"error"';
-            $result .= ', "message": "' . $e->getMessage () . '"}';
-            echo $result;
-        }
+        $customer_id = Mage::getSingleton('customer/session')->getId();
+        $product_id  = $_GET['product_id'];
+
+        echo $customer_id;
+        echo $product_id;
+
+//        $wishlist = Mage::getModel('wishlist/item')->load($_product->getId(),'product_id');
+//        if($wishlist->getId())
+//            //product is added
+//            echo "Added! - Product is in the wishlist!";
     }
 
 
@@ -71,7 +79,6 @@ class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
                 }
             }
         }
-
         return $this->errors;
     }
 
