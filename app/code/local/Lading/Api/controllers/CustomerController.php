@@ -187,6 +187,11 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 			echo json_encode(array('code'=>1, 'msg'=>$e->getMessage(), 'model'=>array()));
 		}
 	}
+
+	/**
+	 * @param $email
+	 * @return bool
+	 */
 	protected function _user_isexists($email) {
 		$info = array ();
 		$customer = Mage::getModel ( 'customer/customer' )->setWebsiteId ( Mage::app ()->getStore ()->getWebsiteId () )->loadByEmail ( $email );
@@ -198,6 +203,15 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 		);
 		return $customer->getId () > 0;
 	}
+
+	/**
+	 * @param $customer
+	 * @param $template
+	 * @param $sender
+	 * @param array $templateParams
+	 * @param null $storeId
+	 * @return $this
+	 */
 	protected function _sendEmailTemplate($customer,$template, $sender, $templateParams = array(), $storeId = null)
 	{
 		/** @var $mailer Mage_Core_Model_Email_Template_Mailer */

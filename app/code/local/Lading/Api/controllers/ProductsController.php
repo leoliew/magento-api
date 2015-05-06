@@ -106,6 +106,9 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 		$product = Mage::getModel ( "catalog/product" )->load ( $productid );
 
 		$productdetail = array (
+			'code' => 0,
+			'msg' => null,
+			'model' =>array(
 
 				'entity_id' => $product->getId (),
 
@@ -132,7 +135,7 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 				'description' => nl2br ( $product->getDescription () ),
 
 				'symbol' => Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol () 
-
+			)
 		);
 
 		echo json_encode ( $productdetail );

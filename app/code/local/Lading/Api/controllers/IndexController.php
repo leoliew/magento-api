@@ -54,7 +54,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 
 				}
 
-				echo json_encode ( $_categorylist );
+				echo json_encode (array('code'=>0, 'msg'=>null ,'model'=>$_categorylist));
 
 				// ---------------------------------列出产品目录 END----------------------------------------//
 
@@ -94,7 +94,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 
 				}
 
-				echo json_encode ( $productlist );
+				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 
 				// ------------------------------取某个分类下的产品-END-----------------------------------//
 
@@ -174,7 +174,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 
 				}
 
-				echo json_encode ( $productlist );
+				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 
 				// ------------------------------首页 促销商品 END-------------------------------------//
 
@@ -280,7 +280,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 
 
 
-				echo json_encode ( $productlist );
+				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 
 				// ------------------------------首页 预特价商品 END--------------------------------//
 
@@ -350,7 +350,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 
 				}
 
-				echo json_encode ( $productlist );
+				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 
 				// echo $count;
 
@@ -362,8 +362,8 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 
 			default :
 
-				echo 'Your request was wrong.';
-
+				// echo 'Your request was wrong.';
+			echo json_encode(array('code'=>1, 'msg'=>'Your request was wrong.', 'model'=>array()));
 				// echo $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
 
 				// echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
@@ -374,6 +374,11 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 
 	}
 
+	/**
+	 * @param $products
+	 * @param string $mod
+	 * @return array
+	 */
 	public function getProductlist($products, $mod = 'product') {
 
 		$productlist = array ();
