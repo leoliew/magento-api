@@ -131,7 +131,8 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 
 			}
 
-			echo json_encode($productlist);
+			// echo json_encode($productlist);
+			echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 
 			if (! Mage::helper ( 'catalogsearch' )->isMinQueryLength ()) {
 
