@@ -142,6 +142,11 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 		
 		return $cartItemsArr;
 	}
+
+	/**
+	 * @param $item
+	 * @return array
+	 */
 	protected function _getCustomOptions($item){
 		$session = Mage::getSingleton('checkout/session');
 		$options=$item->getProduct()->getTypeInstance(true)->getOrderOptions($item->getProduct());

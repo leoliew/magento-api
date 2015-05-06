@@ -184,7 +184,7 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 			Mage::getSingleton ( 'customer/session' )->logout();
 			echo json_encode(array('code'=>0, 'msg'=>null, 'model'=>array()));
 		} catch (Exception $e) {
-			echo json_encode(array('code'=>0, 'msg'=>$e->getMessage(), 'model'=>array()));
+			echo json_encode(array('code'=>1, 'msg'=>$e->getMessage(), 'model'=>array()));
 		}
 	}
 	protected function _user_isexists($email) {
