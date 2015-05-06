@@ -145,6 +145,8 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 				'sku' => $product->getSku (),
 
+				'status' => $product->getStatus(),
+
 				'name' => $product->getName (),
 
 				'news_from_date' => $product->getNewsFromDate (),

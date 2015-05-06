@@ -17,7 +17,7 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 	public function statusAction() {
 		$customerinfo = array ();
 		if (Mage::getSingleton ( 'customer/session' )->isLoggedIn ()) {
-			$session = Mage::getSingleton('customer/session', array('name' => 'frontend'));
+			$session = Mage::getSingleton("core/session")->getEncryptedSessionId();
 			$customer = Mage::getSingleton ( 'customer/session' )->getCustomer ();
 			$customerinfo = array (
 				'code' => 0,
