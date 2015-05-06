@@ -39,6 +39,24 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 			echo json_encode($result);
 		}
 	}
+
+	/**
+     * @method removeCartItem
+     * @param int $id
+     * @return array
+     */
+    public function removeCartAction(){
+
+    	$id = $this->getRequest ()->getParam ( 'cart_item_id' );
+        
+        Mage::getSingleton('checkout/cart')->removeItem($id)->save();
+        echo json_encode(array(
+            'code' => 0,
+            'msg'  => Mage::getModel('checkout/cart')->save(),
+            'model' => null
+        ));
+    }
+
 	public function getCartInfoAction() {
 		if(Mage::getSingleton ( 'customer/session' )->isLoggedIn ()){
 			$cart = Mage::getSingleton ( 'checkout/cart' );
@@ -50,12 +68,12 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 			$cartInfo = array ();
 			$cartInfo ['is_virtual'] = Mage::helper ( 'checkout/cart' )->getIsVirtualQuote ();
 			$cartInfo ['cart_items'] = $this->_getCartItems ();
-			$cartInfo ['messages'] = sizeof ( $this->errors ) ? $this->errors : $this->_getMessage ();
+			$message = sizeof ( $this->errors ) ? $this->errors : $this->_getMessage ();
 			$cartInfo ['cart_items_count'] = Mage::helper ( 'checkout/cart' )->getSummaryCount ();
 			$cartInfo ['payment_methods'] = $this->_getPaymentInfo ();
 			$cartInfo ['allow_guest_checkout'] = Mage::helper ( 'checkout' )->isAllowedGuestCheckout ( $cart->getQuote () );
 			
-			echo json_encode (array('code'=>0, 'msg'=>null, 'model'=>$cartInfo));
+			echo json_encode (array('code'=>0, 'msg'=>$message, 'model'=>$cartInfo));
 		}else{
 			echo json_encode(array(
 				'code' => 1,

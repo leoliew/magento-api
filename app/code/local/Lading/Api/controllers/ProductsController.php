@@ -93,6 +93,18 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 	}
 
+	public function array_flatten($array){
+	   while (($v = array_shift($array)) !== null) {
+	       if (is_array($v)) {
+	           $array = array_merge($v, $array);
+	       } else {
+	           $tmp[] = $v;
+	       }
+	   }
+	   
+	   return $tmp;
+	}
+
 	public function getproductdetailAction() {
 
 		$productdetail = array ();
@@ -104,6 +116,25 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 		$productid = $this->getRequest ()->getParam ( 'productid' );
 
 		$product = Mage::getModel ( "catalog/product" )->load ( $productid );
+
+		$options = array();
+
+		if ($product->getTypeId() === 'configurable') {
+
+            $options   = $this->getProductVariations($productid);
+
+            $productIds = $this->array_flatten(array_map(function($product) {
+
+                return $product['id'];
+
+            }, $options['collection']));
+
+            // foreach ($productIds as $productid) {
+
+            //     array_push($options, $this->getProduct($productid));
+
+            // }
+        }
 
 		$productdetail = array (
 			'code' => 0,
@@ -134,13 +165,60 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 				'description' => nl2br ( $product->getDescription () ),
 
-				'symbol' => Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol () 
+				'symbol' => Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol () ,
+
+				'options' => $options
 			)
 		);
 
 		echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productdetail) );
 
 	}
+
+
+	/**
+     * Returns product information for child SKUs of product (colors, sizes, etc).
+     * 
+     * @method getProductVariations
+     * @param int $productId
+     * @return array
+     */
+    public function getProductVariations($productId)
+    {
+        
+        $product = Mage::getModel('catalog/product')->load((int) $productId);
+        
+        $children = Mage::getModel('catalog/product_type_configurable')->getUsedProducts(null, $product);
+        
+        $attributes = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
+
+        $products = array('label' => null, 'collection' => array());
+
+        foreach ($children as $child) {
+            foreach ($attributes as $attribute) {
+
+                $products['label'] = $attribute['store_label'];
+
+                foreach ($attribute['values'] as $value) {
+
+                    $childValue = $child->getData($attribute['attribute_code']);
+
+                    if ($value['value_index'] == $childValue) {
+
+                        $products['collection'][] = array(
+
+                            'id'    => (int) $child->getId(),
+
+                            'label' => $value['store_label']
+                        );
+                    }
+                }
+            }
+        }
+        return $products;
+    }
+
+
 
 	public function gettest(){
 

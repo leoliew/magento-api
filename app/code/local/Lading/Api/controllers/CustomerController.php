@@ -17,6 +17,7 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 	public function statusAction() {
 		$customerinfo = array ();
 		if (Mage::getSingleton ( 'customer/session' )->isLoggedIn ()) {
+			$session = Mage::getSingleton('customer/session', array('name' => 'frontend'));
 			$customer = Mage::getSingleton ( 'customer/session' )->getCustomer ();
 			$customerinfo = array (
 				'code' => 0,
@@ -25,7 +26,8 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 					'name' => $customer->getName (),
 					'email' => $customer->getEmail (),
 					'avatar' => $customer->getMyAvatar (),
-					'tel' => $customer->getDefaultMobileNumber () 
+					'tel' => $customer->getDefaultMobileNumber (),
+					'session' => $session
 				)
 			);
 			echo json_encode ( $customerinfo );
