@@ -19,6 +19,10 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 		if (Mage::getSingleton ( 'customer/session' )->isLoggedIn ()) {
 			$session = Mage::getSingleton("core/session")->getEncryptedSessionId();
 			$customer = Mage::getSingleton ( 'customer/session' )->getCustomer ();
+			$storeUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+			$avatar = $customer->getMyAvatar (); 
+			if (isset($avatar))
+				$avatar = $storeUrl . "customer" . $customer->getMyAvatar ();
 			$customerinfo = array (
 				'code' => 0,
 				'msg' => null,

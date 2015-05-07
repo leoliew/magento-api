@@ -3,6 +3,7 @@
  * Class Lading_Api_CartController
  */
 class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
+	///mobileapi/cart/add?product=421&qty=5&super_attribute[92]=21&super_attribute[180]=78
 	public function addAction() {
 		try {
 			$product_id = $this->getRequest ()->getParam ( 'product' );
@@ -42,8 +43,7 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 
 	/**
      * @method removeCartItem
-     * @param int $id
-     * @return array
+     * 
      */
     public function removeCartAction(){
 
@@ -56,6 +56,64 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
             'model' => null
         ));
     }
+    /**
+     * @method updateAction
+     *
+     */
+	public function updateAction() {
+		$itemId = ( int ) $this->getRequest ()->getParam ( 'cart_item_id', 0 );
+		$qty = ( int ) $this->getRequest ()->getParam ( 'qty', 0 );
+		$oldQty = 0;
+		$item = null;
+		try {
+			if ($itemId && $qty > 0) {
+				$cartData = array ();
+				$cartData [$itemId] ['qty'] = $qty;
+				$cart = Mage::getSingleton ( 'checkout/cart' );
+				/* * ****** if update fail rollback ********* */
+				if ($cart->getQuote ()->getItemById ( $itemId )) {
+					$item = $cart->getQuote ()->getItemById ( $itemId );
+				} else {
+					echo json_encode ( array (
+							'code' => 1,
+							'msg' => 'a wrong cart_item_id was given.',
+							'model' => null 
+					) );
+					return false;
+				}
+				$oldQty = $item->getQty ();
+				if (! $cart->getCustomerSession ()->getCustomer ()->getId () && $cart->getQuote ()->getCustomerId ()) {
+					$cart->getQuote ()->setCustomerId ( null );
+				}
+				$cart->updateItems ( $cartData )->save ();
+				if ($cart->getQuote ()->getHasError ()) { // apply for 1.7.0.2
+					$mesg = current ( $cart->getQuote ()->getErrors () );
+					Mage::throwException ( $mesg->getText () );
+					return false;
+				}
+			}
+			$session = Mage::getSingleton ( 'checkout/session' );
+			$session->setCartWasUpdated ( true );
+		} catch ( Mage_Core_Exception $e ) { // rollback $quote->collectTotals()->save();
+			$item && $item->setData ( 'qty', $oldQty );
+			$cart->getQuote ()->setTotalsCollectedFlag ( false ); // reflash price
+			echo json_encode (array(
+				'code' => 1,
+				'msg' => $e->getMessage (),
+				'model' => null
+			));
+			return false;
+		} catch ( Exception $e ) {
+			echo json_encode (array(
+				'code' => 1,
+				'msg' => $e->getMessage (),
+				'model' => null
+			) );
+			return false;
+		}
+		return $this->getCartInfoAction ();
+	}
+
 
 	public function getCartInfoAction() {
 		if(Mage::getSingleton ( 'customer/session' )->isLoggedIn ()){
@@ -275,13 +333,115 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 			return;
 		}
 		$categories = $product->getCategoryIds ();
-		Mage::getModel ( 'core/session' )->setProductToShoppingCart ( new Varien_Object ( array (
+		$attrs = $product->getAttributes();
+		foreach ($attrs as $attribute) {
+		    if ($attribute->getIsVisibleOnFront()) {
+		        $value = $attribute->getValue($product);
+		        // do something with $value here
+		    }
+		}
+
+		$_helper2 = Mage::getModel('catalog/product_type_configurable')->setProduct($product);
+		$_subproducts = $_helper2->getUsedProductCollection()->addAttributeToSelect('*')->addFilterByRequiredOptions();
+		$_colors = array();
+        $_color_id = array();
+        foreach ($_subproducts as $_subproduct) {
+        	$label = $_subproduct->getAttributeText('color');
+          	$_colors[] = $label;
+
+			if (!isset($_color_id[$label])) {
+				$_color_id[$label] = $_subproduct->getData('color');
+			}
+        }
+        $_color_swatch = array_unique($_colors);
+
+		// $product = Mage::getModel('catalog/product')->load($product->getId ());
+		// $configurable= Mage::getModel('catalog/product_type_configurable')->setProduct($product);
+		// $simpleCollection = $configurable->getUsedProductCollection()->addAttributeToSelect('*')->addFilterByRequiredOptions();
+
+		$test1 = array();
+		$test2 = array();
+		// $test3 = array();
+		// $test4 = array();
+		// $test5 = array();
+		// $test6 = array();
+		// $test7 = array();
+		// $test8 = array();
+		// foreach($simpleCollection as $simple){
+		//    $test1[] = $simple->getAttributeText('color');
+		//    $test2[] = $simple->getAttributeText('size');
+		//    $test3[] = $simple->getData('color');
+		//    $test4[] = $simple->getData('size');
+		//    $test5[] = $simple->getAttributeText('fit');
+		//    $test6[] = $simple->getData('fit');
+		//    $test7[] = $simple->getAttributeText('color');
+		//    $test8[] = $simple->getAttributeText('color');
+		// }
+
+
+  //       $attribute = Mage::getModel('eav/config')->getAttribute('catalog_product', 'color');  
+		// foreach ($attribute->getSource()->getAllOptions(true) as $option) {
+		//     $test1[] = $option['value'] ;
+		//     $test2[] = $option['label'] ;
+		// }
+
+		// Collect options applicable to the configurable product
+		$productAttributeOptions = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
+		$attributeOptions = array();
+		foreach ($productAttributeOptions as $productAttribute) {
+			foreach($productAttribute['values'] as $attribute) {
+				$attributeOptions[$productAttribute['label']][$attribute['value_index']] = $attribute['store_label'];
+			};
+		};
+
+		// Mage::getModel ( 'core/session' )->setProductToShoppingCart ( new Varien_Object ( array (
+		// 		'id' => $product->getId (),
+		// 		'qty' => Mage::app ()->getRequest ()->getParam ( 'qty', 1 ),
+		// 		'name' => $product->getName (),
+		// 		'price' => $product->getPrice (),
+		// 		'category_name' => Mage::getModel ( 'catalog/category' )->load ( $categories [0] )->getName () 
+		// ) ) );
+		echo json_encode(
+			array(
 				'id' => $product->getId (),
 				'qty' => Mage::app ()->getRequest ()->getParam ( 'qty', 1 ),
-				'name' => $product->getName (),
 				'price' => $product->getPrice (),
-				'category_name' => Mage::getModel ( 'catalog/category' )->load ( $categories [0] )->getName () 
-		) ) );
+				'name' => $product->getName (),
+				'category_name' => Mage::getModel ( 'catalog/category' )->load ( $categories [0] )->getName (),
+				'getUrlModel' => $product->getUrlModel(),
+				'getTypeId' => $product->getTypeId(),
+				'getStatus' => $product->getStatus(),
+				'getLinkInstance' => $product->getLinkInstance(),
+				'getCategoryId' => $product->getCategoryId(),
+				'getCategory' => $product->getCategory(),
+				'getRelatedProducts' => $product->getRelatedProducts(),
+				'getRelatedProductIds' => $product->getRelatedProductIds(),
+				'getRelatedProductCollection' => $product->getRelatedProductCollection(),
+				'getUpSellProducts' => $product->getUpSellProducts(),
+				'getUpSellProductIds' => $product->getUpSellProductIds(),
+				'getUpSellProductCollection' => $product->getUpSellProductCollection(),
+				'getCrossSellProducts' => $product->getCrossSellProducts(),
+				'getCrossSellProductIds' => $product->getCrossSellProductIds(),
+				'getCrossSellProductCollection' => $product->getCrossSellProductCollection(),
+				'getMediaAttributes' => $product->getMediaAttributes(),
+				'getMediaGalleryImages' => $product->getMediaGalleryImages(),
+				'getCrossSellProductCollection' => $product->getCrossSellProductCollection(),
+				'getOptionById' => $product->getOptionById(),
+				'getOptions' => $product->getOptions(),
+				'getThumbnailUrl' => $product->getThumbnailUrl(),
+				'_subproducts' => $_subproducts,
+				'values' => $value,
+				'_color_swatch' => $_color_swatch,
+				'test1' => $test1,
+				'test2' => $test2,
+				'$attributeOptions' => $attributeOptions
+
+
+
+				
+				
+			)
+		);
 	}
 	public function getaddurlAction() {
 		$productid = $this->getRequest ()->getParam ( 'productid' );
