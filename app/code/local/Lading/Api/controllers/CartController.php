@@ -115,6 +115,84 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 	}
 
 
+	/**
+	 * 1.24 取购物车中总金额及优惠券使用情况
+	 */
+	public function getCouponDetailAction() {
+		$result = array (
+			'code' => 0,
+			'msg' => 'get coupon detail success',
+			'model' => $this->_getCartTotal()
+		);
+		echo json_encode ($result);
+	}
+
+	/**
+	 * 在购物车中使用和取消coupon 优惠券
+	 * @return bool
+	 */
+	public function useCouponAction() {
+		$couponCode = ( string ) Mage::app ()->getRequest ()->getParam ( 'coupon_code' );
+		$cart = Mage::helper ( 'checkout/cart' )->getCart ();
+		if (! $cart->getItemsCount ()) {
+			echo json_encode ( array (
+				'code' => '0X0001',
+				'message' => "You can't use coupon code with an empty shopping cart"
+			) );
+			return false;
+		}
+		if (Mage::app ()->getRequest ()->getParam ( 'remove' ) == 1) {
+			$couponCode = '';
+		}
+		$oldCouponCode = $cart->getQuote ()->getCouponCode ();
+		if (! strlen ( $couponCode ) && ! strlen ( $oldCouponCode )) {
+			echo json_encode ( array (
+				'code' => '0X0002',
+				'message' => "Emptyed."
+			) );
+			return false;
+		}
+		try {
+			$codeLength = strlen ( $couponCode );
+			$isCodeLengthValid = $codeLength && $codeLength <= Mage_Checkout_Helper_Cart::COUPON_CODE_MAX_LENGTH;
+
+			$cart->getQuote ()->getShippingAddress ()->setCollectShippingRates ( true );
+			$cart->getQuote ()->setCouponCode ( $isCodeLengthValid ? $couponCode : '' )->collectTotals ()->save ();
+
+			if ($codeLength) {
+				if ($isCodeLengthValid && $couponCode == $cart->getQuote ()->getCouponCode ()) {
+					$messages = array (
+						'code' => '0',
+						'message' => $this->__ ( 'Coupon code "%s" was applied.', Mage::helper ( 'core' )->escapeHtml ( $couponCode ) )
+					);
+				} else {
+					$messages = array (
+						'code' => '1',
+						'message' => $this->__ ( 'Coupon code "%s" is not valid.', Mage::helper ( 'core' )->escapeHtml ( $couponCode ) )
+					);
+				}
+			} else {
+				$messages = array (
+					'code' => '2',
+					'message' => $this->__ ( 'Coupon code was canceled.' )
+				);
+			}
+		} catch ( Mage_Core_Exception $e ) {
+			$messages = array (
+				'code' => '3',
+				'message' => $e->getMessage ()
+			);
+		} catch ( Exception $e ) {
+			$messages = array (
+				'code' => '4',
+				'message' => $this->__ ( 'Cannot apply the coupon code.' )
+			);
+		}
+		echo json_encode ( array_merge ( $messages, $this->_getCartTotal () ) );
+	}
+
+
+
 	public function getCartInfoAction() {
 		if(Mage::getSingleton ( 'customer/session' )->isLoggedIn ()){
 			$cart = Mage::getSingleton ( 'checkout/cart' );
@@ -141,6 +219,41 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 		} 
 	
 	}
+
+	/**
+	 * 获取购物车详情（总金额以及优惠券使用情况）
+	 * @return array
+	 */
+	protected function _getCartTotal() {
+		$cart = Mage::getSingleton ( 'checkout/cart' );
+		$totalItemsInCart = Mage::helper ( 'checkout/cart' )->getItemsCount (); // total items in cart
+		$totals = Mage::getSingleton ( 'checkout/session' )->getQuote ()->getTotals (); // Total object
+		$oldCouponCode = $cart->getQuote ()->getCouponCode ();
+		$oCoupon = Mage::getModel ( 'salesrule/coupon' )->load ( $oldCouponCode, 'code' );
+		$oRule = Mage::getModel ( 'salesrule/rule' )->load ( $oCoupon->getRuleId () );
+
+		$subtotal = round ( $totals ["subtotal"]->getValue () ); // Subtotal value
+		$grandtotal = round ( $totals ["grand_total"]->getValue () ); // Grandtotal value
+		if (isset ( $totals ['discount'] )) { // $totals['discount']->getValue()) {
+			$discount = round ( $totals ['discount']->getValue () ); // Discount value if applied
+		} else {
+			$discount = '';
+		}
+		if (isset ( $totals ['tax'] )) { // $totals['tax']->getValue()) {
+			$tax = round ( $totals ['tax']->getValue () ); // Tax value if present
+		} else {
+			$tax = '';
+		}
+		return array (
+			'subtotal' => $subtotal,
+			'grandtotal' => $grandtotal,
+			'discount' => $discount,
+			'tax' => $tax,
+			'coupon_code' => $oldCouponCode,
+			'coupon_rule' => $oRule->getData ()
+		);
+	}
+
 	public function _getMessage() {
 		$cart = Mage::getSingleton ( 'checkout/cart' );
 		if (!Mage::getSingleton('checkout/type_onepage')->getQuote()->hasItems()) {

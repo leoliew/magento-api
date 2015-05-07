@@ -136,6 +136,15 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
             // }
         }
 
+
+        $productAttributeOptions = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
+		$attributeOptions = array();
+		foreach ($productAttributeOptions as $productAttribute) {
+			foreach($productAttribute['values'] as $attribute) {
+				$attributeOptions[$productAttribute['label']][$attribute['value_index']] = $attribute['store_label'];
+			};
+		};
+
 		$productdetail = array (
 			'code' => 0,
 			'msg' => null,
@@ -169,7 +178,9 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 				'symbol' => Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol () ,
 
-				'options' => $options
+				'options' => $options['collection'],
+
+				'$attributeOptions' => $attributeOptions
 			)
 		);
 
