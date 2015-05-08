@@ -5,93 +5,56 @@
  */
 class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
+
+	/**
+	 * 获取商品自定义属性
+	 */
 	public function getcustomoptionAction() {
-
 		$baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
-
 		$currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
-
 		$productid = $this->getRequest ()->getParam ( 'productid' );
-
 		$product = Mage::getModel ( "catalog/product" )->load ( $productid );
-
 		$selectid = 1;
-
 		$select = array ();
-
 		foreach ( $product->getOptions () as $o ) {
-
 			if (($o->getType () == "field") || ($o->getType () =="file")) {
-
 				$select [$selectid] = array (
-
-						'option_id' => $o->getId (),
-
-						'custom_option_type' => $o->getType (),
-
-						'custom_option_title' => $o->getTitle (),
-
-						'is_require' => $o->getIsRequire (),
-
-						'price' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $o->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-
-						'price_type'=>$o->getPriceType(),
-
-						'sku'=>$o->getSku(),
-
-						'max_characters' => $o->getMaxCharacters (),
-
+					'option_id' => $o->getId (),
+					'custom_option_type' => $o->getType (),
+					'custom_option_title' => $o->getTitle (),
+					'is_require' => $o->getIsRequire (),
+					'price' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $o->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+					'price_type'=>$o->getPriceType(),
+					'sku'=>$o->getSku(),
+					'max_characters' => $o->getMaxCharacters (),
 				);
-
 			} else {
-
 				$max_characters = $o->getMaxCharacters ();
-
 				$optionid = 1;
-
 				$options = array ();
-
 				$values = $o->getValues ();
-
 				foreach ( $values as $v ) {
-
 					$options [$optionid] = $v->getData ();
-
 					$optionid ++;
-
 				}
-
 				$select [$selectid] = array (
-
-						'option_id' => $o->getId (),
-
-						'custom_option_type' => $o->getType (),
-
-						'custom_option_title' => $o->getTitle (),
-
-						'is_require' => $o->getIsRequire (),
-
-						'price' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $o->getFormatedPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-
-						'max_characters' => $max_characters,
-
-						'custom_option_value' => $options 
-
+					'option_id' => $o->getId (),
+					'custom_option_type' => $o->getType (),
+					'custom_option_title' => $o->getTitle (),
+					'is_require' => $o->getIsRequire (),
+					'price' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $o->getFormatedPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+					'max_characters' => $max_characters,
+					'custom_option_value' => $options
 				);
-
 			}
 
-			
-
 			$selectid ++;
-
 			// echo "----------------------------------<br/>";
-
 		}
-
 		echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$select) );
-
 	}
+
+
 
 	public function array_flatten($array){
 	   while (($v = array_shift($array)) !== null) {
@@ -147,7 +110,30 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
             //     array_push($options, $this->getProduct($productid));
 
             // }
+
+
+
+	  //       $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+
+			// $result = $read->query(
+			// 	"SELECT eav.attribute_code,eav.attribute_id FROM eav_attribute as eav LEFT JOIN catalog_product_super_attribute as super ON eav.attribute_id = super.attribute_id WHERE (product_id = " . $product->getId () . ");"
+				
+			// );
+
+			// $attributeCodes = array();
+			// while ($row = $result->fetch()) {
+			// 	$attributeCodes[$row['attribute_code']] = $row['attribute_id'];
+			// }
+
         }
+
+
+
+		$mediaGallery = array();
+		foreach($product->getMediaGalleryImages()->getItems() as $image){
+			$mediaGallery[] = $image['url'];
+		}
+
 
 		$productdetail = array (
 			'code' => 0,
@@ -184,7 +170,11 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 				'options' => $options,
 
-				'$attributeOptions' => $attributeOptions
+				'attributeOptions' => $attributeOptions,
+
+				'mediaGallery' => $mediaGallery
+
+
 			)
 		);
 
@@ -209,12 +199,12 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
         
         $attributes = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
 
-        $products = array('label' => null, 'collection' => array());
+        $products = array('label' => array(), 'collection' => array());
 
         foreach ($children as $child) {
             foreach ($attributes as $attribute) {
 
-                $products['label'] = $attribute['store_label'];
+                $products['label'][$attribute['store_label']] = $attribute['attribute_id'];
 
                 foreach ($attribute['values'] as $value) {
 
@@ -226,7 +216,9 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
                             'id'    => (int) $child->getId(),
 
-                            'label' => $value['store_label']
+                            'label' => $value['store_label'],
+
+                            'index' => $value['value_index']
                         );
                     }
                 }

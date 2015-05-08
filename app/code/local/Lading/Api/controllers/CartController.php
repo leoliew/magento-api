@@ -507,6 +507,40 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 			};
 		};
 
+		$mediaGallery = array();
+        foreach($product->getMediaGalleryImages()->getItems() as $image){
+        	$mediaGallery[] = $image['url'];
+        }
+
+        $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+
+		$result = $read->query(
+			"SELECT eav.attribute_code,eav.attribute_id FROM eav_attribute as eav LEFT JOIN catalog_product_super_attribute as super ON eav.attribute_id = super.attribute_id WHERE (product_id = " . $product->getId () . ");"
+			
+		);
+
+		$attributeCodes = array();
+		while ($row = $result->fetch()) {
+			$attributeCodes[$row['attribute_code']] = $row['attribute_id'];
+		};
+		$json = array('products' => array());
+		$products = Mage::getModel('catalog/product')->getCollection()->addOrderedQty()->addAttributeToSelect('*')->addAttributeToSelect(array('name', 'price', 'small_image'))->setStoreId($product->getId ())->addStoreFilter($product->getId ())->addViewsCount();
+		Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($products);
+        Mage::getSingleton('catalog/product_visibility')->addVisibleInCatalogFilterToCollection($products);
+ 
+        foreach($products as $product){ 
+			$json['products'][] = array(
+					'id'                    => $product->getId(),
+					'name'                  => $product->getName(),
+					'description'           => $product->getShortDescription(),
+					'pirce'                 => Mage::helper('core')->currency($product->getPrice(), true, false), //." ".$currencyCode,
+					'href'                  => $product->getProductUrl(),
+					'thumb'                 => (string)Mage::helper('catalog/image')->init($product, 'thumbnail')
+				);
+		}
+
+
+
 		// Mage::getModel ( 'core/session' )->setProductToShoppingCart ( new Varien_Object ( array (
 		// 		'id' => $product->getId (),
 		// 		'qty' => Mage::app ()->getRequest ()->getParam ( 'qty', 1 ),
@@ -524,22 +558,6 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 				'getUrlModel' => $product->getUrlModel(),
 				'getTypeId' => $product->getTypeId(),
 				'getStatus' => $product->getStatus(),
-				'getLinkInstance' => $product->getLinkInstance(),
-				'getCategoryId' => $product->getCategoryId(),
-				'getCategory' => $product->getCategory(),
-				'getRelatedProducts' => $product->getRelatedProducts(),
-				'getRelatedProductIds' => $product->getRelatedProductIds(),
-				'getRelatedProductCollection' => $product->getRelatedProductCollection(),
-				'getUpSellProducts' => $product->getUpSellProducts(),
-				'getUpSellProductIds' => $product->getUpSellProductIds(),
-				'getUpSellProductCollection' => $product->getUpSellProductCollection(),
-				'getCrossSellProducts' => $product->getCrossSellProducts(),
-				'getCrossSellProductIds' => $product->getCrossSellProductIds(),
-				'getCrossSellProductCollection' => $product->getCrossSellProductCollection(),
-				'getMediaAttributes' => $product->getMediaAttributes(),
-				'getMediaGalleryImages' => $product->getMediaGalleryImages(),
-				'getCrossSellProductCollection' => $product->getCrossSellProductCollection(),
-				'getOptionById' => $product->getOptionById(),
 				'getOptions' => $product->getOptions(),
 				'getThumbnailUrl' => $product->getThumbnailUrl(),
 				'_subproducts' => $_subproducts,
@@ -547,7 +565,10 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 				'_color_swatch' => $_color_swatch,
 				'test1' => $test1,
 				'test2' => $test2,
-				'$attributeOptions' => $attributeOptions
+				'attributeOptions' => $attributeOptions,
+				'mediaGallery' => $mediaGallery,
+				'json' => $json,
+				'attributeCodes' => $attributeCodes
 
 
 
