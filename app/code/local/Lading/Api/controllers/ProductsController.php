@@ -6,285 +6,242 @@
 class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 
-	/**
-	 * 获取商品自定义属性
-	 */
-	public function getcustomoptionAction() {
-		$baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
-		$currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
-		$productid = $this->getRequest ()->getParam ( 'productid' );
-		$product = Mage::getModel ( "catalog/product" )->load ( $productid );
-		$selectid = 1;
-		$select = array ();
-		foreach ( $product->getOptions () as $o ) {
-			if (($o->getType () == "field") || ($o->getType () =="file")) {
-				$select [$selectid] = array (
-					'option_id' => $o->getId (),
-					'custom_option_type' => $o->getType (),
-					'custom_option_title' => $o->getTitle (),
-					'is_require' => $o->getIsRequire (),
-					'price' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $o->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-					'price_type'=>$o->getPriceType(),
-					'sku'=>$o->getSku(),
-					'max_characters' => $o->getMaxCharacters (),
-				);
-			} else {
-				$max_characters = $o->getMaxCharacters ();
-				$optionid = 1;
-				$options = array ();
-				$values = $o->getValues ();
-				foreach ( $values as $v ) {
-					$options [$optionid] = $v->getData ();
-					$optionid ++;
-				}
-				$select [$selectid] = array (
-					'option_id' => $o->getId (),
-					'custom_option_type' => $o->getType (),
-					'custom_option_title' => $o->getTitle (),
-					'is_require' => $o->getIsRequire (),
-					'price' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $o->getFormatedPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-					'max_characters' => $max_characters,
-					'custom_option_value' => $options
-				);
-			}
-
-			$selectid ++;
-			// echo "----------------------------------<br/>";
-		}
-		echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$select) );
-	}
-
-
-
-	public function array_flatten($array){
-	   while (($v = array_shift($array)) !== null) {
-	       if (is_array($v)) {
-	           $array = array_merge($v, $array);
-	       } else {
-	           $tmp[] = $v;
-	       }
-	   }
-	   
-	   return $tmp;
-	}
-
-	public function getproductdetailAction() {
-
-		$productdetail = array ();
-
-		$baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
-
-		$currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
-
-		$productid = $this->getRequest ()->getParam ( 'productid' );
-
-		$product = Mage::getModel ( "catalog/product" )->load ( $productid );
-
-		$options = array();
-
-		if ($product->getTypeId() === 'configurable') {
-
-            $options   = $this->getProductVariations($productid);
-
-            $productAttributeOptions = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
-			
-			$attributeOptions = array();
-			
-			foreach ($productAttributeOptions as $productAttribute) {
-
-				foreach($productAttribute['values'] as $attribute) {
-				
-					$attributeOptions[$productAttribute['label']][$attribute['value_index']] = $attribute['store_label'];
-				
-				};
-			};
-
-            $productIds = $this->array_flatten(array_map(function($product) {
-
-                return $product['id'];
-
-            }, $options['collection']));
-
-            // foreach ($productIds as $productid) {
-
-            //     array_push($options, $this->getProduct($productid));
-
-            // }
-
-
-
-	  //       $read = Mage::getSingleton('core/resource')->getConnection('core_read');
-
-			// $result = $read->query(
-			// 	"SELECT eav.attribute_code,eav.attribute_id FROM eav_attribute as eav LEFT JOIN catalog_product_super_attribute as super ON eav.attribute_id = super.attribute_id WHERE (product_id = " . $product->getId () . ");"
-				
-			// );
-
-			// $attributeCodes = array();
-			// while ($row = $result->fetch()) {
-			// 	$attributeCodes[$row['attribute_code']] = $row['attribute_id'];
-			// }
-
-        }
-
-
-
-		$mediaGallery = array();
-		foreach($product->getMediaGalleryImages()->getItems() as $image){
-			$mediaGallery[] = $image['url'];
-		}
-
-
-		$productdetail = array (
-			'code' => 0,
-			'msg' => null,
-			'model' =>array(
-
-				'entity_id' => $product->getId (),
-
-				'sku' => $product->getSku (),
-
-				'status' => $product->getStatus(),
-
-				'name' => $product->getName (),
-
-				'news_from_date' => $product->getNewsFromDate (),
-
-				'news_to_date' => $product->getNewsToDate (),
-
-				'special_from_date' => $product->getSpecialFromDate (),
-
-				'special_to_date' => $product->getSpecialToDate (),
-
-				'image_url' => $product->getImageUrl (),
-
-				'url_key' => $product->getProductUrl (),
-
-				'regular_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-
-				'final_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-
-				'description' => nl2br ( $product->getDescription () ),
-
-				'symbol' => Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol () ,
-
-				'options' => $options,
-
-				'attributeOptions' => $attributeOptions,
-
-				'mediaGallery' => $mediaGallery
-
-
-			)
-		);
-
-		echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productdetail) );
-
-	}
-
-
-	/**
-     * Returns product information for child SKUs of product (colors, sizes, etc).
-     * 
-     * @method getProductVariations
-     * @param int $productId
-     * @return array
+    /**
+     * 获取商品自定义属性
      */
-    public function getProductVariations($productId)
-    {
-        
-        $product = Mage::getModel('catalog/product')->load((int) $productId);
-        
-        $children = Mage::getModel('catalog/product_type_configurable')->getUsedProducts(null, $product);
-        
-        $attributes = $product->getTypeInstance(true)->getConfigurableAttributesAsArray($product);
-
-        $products = array('label' => array(), 'collection' => array());
-
-        foreach ($children as $child) {
-            foreach ($attributes as $attribute) {
-
-                $products['label'][$attribute['store_label']] = $attribute['attribute_id'];
-
-                foreach ($attribute['values'] as $value) {
-
-                    $childValue = $child->getData($attribute['attribute_code']);
-
-                    if ($value['value_index'] == $childValue) {
-
-                        $products['collection'][] = array(
-
-                            'id'    => (int) $child->getId(),
-
-                            'label' => $value['store_label'],
-
-                            'index' => $value['value_index']
-                        );
-                    }
+    public function getCustomOptionAction() {
+        $baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
+        $currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
+        $product_id = $this->getRequest ()->getParam ( 'product_id' );
+        $product = Mage::getModel ( "catalog/product" )->load ( $product_id );
+        $selectid = 1;
+        $select = array ();
+        foreach ( $product->getOptions () as $o ) {
+            if (($o->getType () == "field") || ($o->getType () =="file")) {
+                $select [$selectid] = array (
+                    'option_id' => $o->getId (),
+                    'custom_option_type' => $o->getType (),
+                    'custom_option_title' => $o->getTitle (),
+                    'is_require' => $o->getIsRequire (),
+                    'price' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $o->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+                    'price_type'=>$o->getPriceType(),
+                    'sku'=>$o->getSku(),
+                    'max_characters' => $o->getMaxCharacters (),
+                );
+            } else {
+                $max_characters = $o->getMaxCharacters ();
+                $optionid = 1;
+                $options = array ();
+                $values = $o->getValues ();
+                foreach ( $values as $v ) {
+                    $options [$optionid] = $v->getData ();
+                    $optionid ++;
                 }
+                $select [$selectid] = array (
+                    'option_id' => $o->getId (),
+                    'custom_option_type' => $o->getType (),
+                    'custom_option_title' => $o->getTitle (),
+                    'is_require' => $o->getIsRequire (),
+                    'price' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $o->getFormatedPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+                    'max_characters' => $max_characters,
+                    'custom_option_value' => $options
+                );
             }
+            $selectid ++;
         }
-        return $products;
+        echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$select) );
     }
 
 
 
-	public function gettest(){
 
-		$attributes = Mage::getSingleton('eav/config')->getEntityType(Mage_Catalog_Model_Product::ENTITY)->getAttributeCollection();
-
-		// Localize attribute label (if you need it)
-
-		$attributes->addStoreLabel(Mage::app()->getStore()->getId());
-
-		// Loop over all attributes
-
-		foreach ($attributes as $attr) {
-
-			/* @var $attr Mage_Eav_Model_Entity_Attribute */
-
-			// get the store label value
-
-			$label = $attr->getStoreLabel() ? $attr->getStoreLabel() : $attr->getFrontendLabel();
-
-			echo "Attribute: {$label}\n<br>";
-
-			// If it is an attribute with predefined values
-
-			if ($attr->usesSource()) {
-
-	
-
-			// Get all option values ans labels
-
-			$options = $attr->getSource()->getAllOptions();
-
-	
-
-			// Output all option labels and values
-
-			foreach ($options as $option)
-
-			{
-
-			echo "&nbsp;&nbsp;&nbsp;&nbsp;{$option['label']} =========> (Value {$option['value']})\n<br>";
-
-				}
-
-			}
-
-			else
-
-			{
-
-			// Just for clarification of the debug code
-
-				echo "    No select or multiselect attribute\n<br>";
-
-			}
-
+    /**
+     * 获取商品详情
+     */
+    public function getProductDetailAction() {
+        $baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
+        $currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
+        $product_id = $this->getRequest ()->getParam ( 'product_id' );
+        $products_model = Mage::getModel('mobile/products');
+        $product = Mage::getModel ( "catalog/product" )->load ( $product_id );
+        $product_detail = array();
+        $options = array();
+        $price = array();
+        $product_type = $product->getTypeId();
+        switch($product_type){
+            case Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE: {
+                $product_detail['attribute_options'] = $products_model->getProductOptions($product);
+                $price = ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice());
+            }break;
+            case Mage_Catalog_Model_Product_Type::TYPE_SIMPLE: {
+                $product_detail['custom_options'] = $products_model->getProductCustomOptionsOption($product);
+                $price = ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice());
+            }break;
+            case Mage_Catalog_Model_Product_Type::TYPE_BUNDLE: {
+                $price = $products_model->collectBundleProductPrices($product);
+                $product_detail['bundle_option']  =  $products_model->getProductBundleOptions($product);
+            }break;
+            case Mage_Catalog_Model_Product_Type::TYPE_GROUPED: {
+                $product_detail['grouped_option']  =  $products_model->getProductGroupedOptions($product);
+            }break;
+            case Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL:  {
+                $price = ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice());
+            }break;
+            default: {
+                $price = ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice());
+            } break;
+        }
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 467ef08... code review
+        $product_detail['price'] = $price;
+        $mediaGallery = array();
+        foreach($product->getMediaGalleryImages()->getItems() as $image){
+            $mediaGallery[] = $image['url'];
+        }
+        $product_detail['entity_id'] = $product->getId ();
+        $product_detail['sku'] = $product->getSku ();
+        $product_detail['status'] = $product->getStatus();
+        $product_detail['name'] = $product->getName ();
+        $product_detail['news_from_date'] = $product->getNewsFromDate ();
+        $product_detail['news_to_date'] = $product->getNewsToDate ();
+        $product_detail['product_type'] = $product->getTypeID();
+        $product_detail['special_from_date'] = $product->getSpecialFromDate ();
+        $product_detail['special_to_date'] = $product->getSpecialToDate ();
+        $product_detail['image_url'] = $product->getImageUrl ();
+        $product_detail['url_key'] = $product->getProductUrl ();
+        $product_detail['regular_price_with_tax'] = number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' );
+        $product_detail['final_price_with_tax'] = number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' );
+<<<<<<< HEAD
+//			'description' => nl2br ( $product->getDescription()),
+        $product_detail['short_description'] = $product->getShortDescription();
+        $product_detail['symbol'] = Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol ();
+        $product_detail['options'] = $options;
+        $product_detail['mediaGallery'] = $mediaGallery;
+=======
+		$mediaGallery = array();
+		foreach($product->getMediaGalleryImages()->getItems() as $image){
+			$mediaGallery[] = $image['url'];
 		}
+		$product_detail = array(
+			'entity_id' => $product->getId (),
+			'sku' => $product->getSku (),
+			'status' => $product->getStatus(),
+			'name' => $product->getName (),
+			'news_from_date' => $product->getNewsFromDate (),
+			'news_to_date' => $product->getNewsToDate (),
+			'product_type'=> $product->getTypeID(),
+			'special_from_date' => $product->getSpecialFromDate (),
+			'special_to_date' => $product->getSpecialToDate (),
+			'image_url' => $product->getImageUrl (),
+			'url_key' => $product->getProductUrl (),
+			'regular_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+			'final_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+			'price' => ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()),
+=======
+>>>>>>> 467ef08... code review
+//			'description' => nl2br ( $product->getDescription()),
+        $product_detail['short_description'] = $product->getShortDescription();
+        $product_detail['symbol'] = Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol ();
+        $product_detail['options'] = $options;
+        $product_detail['mediaGallery'] = $mediaGallery;
 
+        echo json_encode(array('code'=>0, 'msg'=>null, 'model'=>$product_detail));
+    }
+
+<<<<<<< HEAD
+		if($product->getTypeID()=='bundle'){
+			$bundle_option = array();
+			$optionCollection = $product->getTypeInstance()->getOptionsCollection();
+			$selectionCollection = $product->getTypeInstance()->getSelectionsCollection($product->getTypeInstance()->getOptionsIds());
+			$options = $optionCollection->appendSelections($selectionCollection);
+			foreach( $options as $option )
+			{
+				$temp_options = array();
+				$temp_options['default_title'] = $option->getDefaultTitle();
+				$temp_options['option_id'] = $option->getOptionId();
+				$temp_options['required'] = $option->getRequired();
+                $temp_options['type'] = $option->getType();
+				$_selections = $option->getSelections();
+				foreach( $_selections as $selection )
+				{
+					$temp_options['name'] = $selection->getName();
+					$temp_options['selection_id'] = $selection->getSelectionId();
+					$temp_options['option_id'] = $selection->getOptionId();
+					$temp_options['parent_product_id'] = $selection->getParentProductId();
+					$temp_options['product_id'] = $selection->getProductId();
+					$temp_options['position'] = $selection->getPosition();
+					$temp_options['is_default'] = $selection->getIsDefault();
+					$temp_options['short_description'] = $selection->getShortDescription();
+					$temp_options['price'] = $selection->getPrice();
+					array_push($bundle_option,$temp_options);
+				}
+			}
+			$product_detail['bundle_option']  = $bundle_option;
+		}
+		echo json_encode(array('code'=>0, 'msg'=>null, 'model'=>$product_detail));
 	}
+>>>>>>> a6b4cf6... add shipmethod
+=======
+>>>>>>> 467ef08... code review
+
+        echo json_encode(array('code'=>0, 'msg'=>null, 'model'=>$product_detail));
+    }
+
+    public function testAction() {
+        $product_id = $this->getRequest ()->getParam ( 'product_id' );
+        $product = Mage::getModel ( "catalog/product" )->load ( $product_id );
+//		echo $product->getResource();
+//        echo $product->getInfo();
+//        echo $product->getAdditionalData();
+//        echo '1234567890o';
+//		$attributeId = Mage::getResourceModel('eav/entity_attribute')
+//			->getIdByCode('catalog_product', 'color');
+//		$attributeValue = Mage::getModel('catalog/product')->load($product_id)->getMyAttribute();
+//		echo $attributeValue;
+        $_attributes = $product->getTypeInstance(true)->getConfigurableAttributes($product);
+        $_allowProducts = array();
+        $_allProducts = $product->getTypeInstance(true)->getUsedProducts(null, $product);
+        foreach ($_allProducts as $_product) {
+            if ($_product->isSaleable()) {
+                $_allowProducts[] = $_product;
+            }
+        }
+        echo  $product->getName();
+        echo json_encode($_allProducts);
+    }
+
+
+
+<<<<<<< HEAD
+
+    public function testAction() {
+        $product_id = $this->getRequest ()->getParam ( 'product_id' );
+        $product = Mage::getModel ( "catalog/product" )->load ( $product_id );
+//		echo $product->getResource();
+//        echo $product->getInfo();
+//        echo $product->getAdditionalData();
+//        echo '1234567890o';
+//		$attributeId = Mage::getResourceModel('eav/entity_attribute')
+//			->getIdByCode('catalog_product', 'color');
+//		$attributeValue = Mage::getModel('catalog/product')->load($product_id)->getMyAttribute();
+//		echo $attributeValue;
+        $_attributes = $product->getTypeInstance(true)->getConfigurableAttributes($product);
+        $_allowProducts = array();
+        $_allProducts = $product->getTypeInstance(true)->getUsedProducts(null, $product);
+        foreach ($_allProducts as $_product) {
+            if ($_product->isSaleable()) {
+                $_allowProducts[] = $_product;
+            }
+        }
+        echo  $product->getName();
+        echo json_encode($_allProducts);
+    }
+=======
+>>>>>>> 467ef08... code review
+
+
+
 
 } 

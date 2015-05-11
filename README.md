@@ -14,10 +14,14 @@ Install with [modgit](https://github.com/jreinke/modgit):
     $ modgit init
     $ modgit clone magento-api https://github.com/leoliew/magento-api.git
     
+clone from other branch:
+    
+    $ modgit clone -b dev  magento-api  https://github.com/leoliew/magento-api.git
+    
 or download package manually:
 
 * Download latest version [here](https://github.com/leoliew/magento-api/archive/master.zip)
-* Unzip in Magento root folder
+* `Unzip` in Magento `root` folder
 * Clear cache
 
 ##Examples of use
@@ -27,7 +31,11 @@ or download package manually:
         GET /mobileapi/customer/login?username=username&password=password
             Return Login user information
 
+## API 
 
+see documentation [here](https://github.com/leoliew/magento-api/tree/master/api#api-文档)
+ 
+ 
 License
 -------
 

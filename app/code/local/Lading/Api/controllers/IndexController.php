@@ -41,23 +41,24 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				// ---------------------------------列出产品目录 END----------------------------------------//
 				break;
 
-			case 'catalog' : // OK
-				$categoryid = $this->getRequest ()->getParam ( 'categoryid' );
+			case 'catalog' :
+				$category_id = $this->getRequest ()->getParam ( 'category_id' );
 				$page = ($this->getRequest ()->getParam ( 'page' )) ? ($this->getRequest ()->getParam ( 'page' )) : 1;
 				$limit = ($this->getRequest ()->getParam ( 'limit' )) ? ($this->getRequest ()->getParam ( 'limit' )) : 5;
 				$order = ($this->getRequest ()->getParam ( 'order' )) ? ($this->getRequest ()->getParam ( 'order' )) : 'entity_id';
 				$dir = ($this->getRequest ()->getParam ( 'dir' )) ? ($this->getRequest ()->getParam ( 'dir' )) : 'desc';
 				// ----------------------------------取某个分类下的产品-BEGIN------------------------------//
-				$category = Mage::getModel ( 'catalog/category' )->load ( $categoryid );
-				$model = Mage::getModel ( 'catalog/product' ); // getting product model
-				$collection = $category->getProductCollection ()->addAttributeToSort ( $order, $dir )/* ->setPage ( $page, $limit ) */;
+				$category = Mage::getModel ( 'catalog/category' )->load ( $category_id );
+				$collection = $category->getProductCollection ()->addAttributeToFilter ( 'status', 1 )->addAttributeToFilter ( 'visibility',array(
+					'neq' => 1)
+				)->addAttributeToSort ( $order, $dir )/* ->setPage ( $page, $limit ) */;
 				$pages = $collection->setPageSize ( $limit )->getLastPageNumber ();
 				// $count=$collection->getSize();
 				if ($page <= $pages) {
 					$collection->setPage ( $page, $limit );
-					$productlist = $this->getProductlist ( $collection, 'catalog' );
+					$product_list = $this->getProductList ( $collection, 'catalog' );
 				}
-				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
+				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$product_list) );
 				// ------------------------------取某个分类下的产品-END-----------------------------------//
 				break;
 			case 'coming_soon' : // 数据ok
@@ -94,7 +95,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				if ($page <= $pages) {
 					$_productCollection->setPage ( $page, $limit );
 					$products = $_productCollection->getItems ();
-					$productlist = $this->getProductlist ( $products );
+					$productlist = $this->getProductList ( $products );
 				}
 				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 				// ------------------------------首页 促销商品 END-------------------------------------//
@@ -104,11 +105,15 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				$page = ($this->getRequest ()->getParam ( 'page' )) ? ($this->getRequest ()->getParam ( 'page' )) : 1;
 				$limit = ($this->getRequest ()->getParam ( 'limit' )) ? ($this->getRequest ()->getParam ( 'limit' )) : 5;
 				$todayDate = Mage::app ()->getLocale ()->date ()->toString ( Varien_Date::DATETIME_INTERNAL_FORMAT );
-				$_products = Mage::getModel ( 'catalog/product' )->getCollection ()->addAttributeToSelect ( '*'/* array (
-		'name',
-		'special_price',
-		'news_from_date'
-) */ )->addAttributeToFilter ( 'news_from_date', array (
+				$_products = Mage::getModel ( 'catalog/product' )->getCollection ()->addAttributeToSelect ( '*'
+                    /*
+                    array (
+                        'name',
+                        'special_price',
+                        'news_from_date'
+                    )
+                    */
+                )->addAttributeToFilter ( 'news_from_date', array (
 					'or' => array (
 						0 => array (
 							'date' => true,
@@ -149,7 +154,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				if ($page <= $pages) {
 					$_products->setPage ( $page, $limit );
 					$products = $_products->getItems ();
-					$productlist = $this->getProductlist ( $products );
+					$productlist = $this->getProductList ( $products );
 				}
 				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 				// ------------------------------首页 预特价商品 END--------------------------------//
@@ -184,7 +189,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				if ($page <= $pages) {
 					$collection->setPage ( $page, $limit );
 					$products = $collection->getItems ();
-					$productlist = $this->getProductlist ( $products );
+					$productlist = $this->getProductList ( $products );
 				}
 				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 				// echo $count;
@@ -206,7 +211,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				if ($page <= $pages) {
 					$collection->setPage ( $page, $limit );
 					$products = $collection->getItems ();
-					$productlist = $this->getProductlist ( $products );
+					$productlist = $this->getProductList ( $products );
 				}
 				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 				// echo $count;
@@ -226,17 +231,14 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 	 * @param string $mod
 	 * @return array
 	 */
-	public function getProductlist($products, $mod = 'product') {
-		$productlist = array ();
+	public function getProductList($products, $mod = 'product') {
 		$baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
 		$currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
 		foreach ( $products as $product ) {
 			if ($mod == 'catalog') {
 				$product = Mage::getModel ( 'catalog/product' )->load ( $product ['entity_id'] );
-				// $product = $_product;
 			}
-			// echo $product->getName ();
-			$productlist [] = array (
+			$product_list [] = array (
 				'entity_id' => $product->getId (),
 				'sku' => $product->getSku (),
 				'name' => $product->getName (),
@@ -246,11 +248,12 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				'special_to_date' => $product->getSpecialToDate (),
 				'image_url' => $product->getImageUrl (),
 				'url_key' => $product->getProductUrl (),
+				'price' => ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()),
 				'regular_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
 				'final_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
 				'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol()
 			);
 		}
-		return $productlist;
+		return $product_list;
 	}
 }

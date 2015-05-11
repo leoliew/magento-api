@@ -14,8 +14,11 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 	const XML_PATH_CONFIRM_EMAIL_TEMPLATE       = 'customer/create_account/email_confirmation_template';
 	const XML_PATH_CONFIRMED_EMAIL_TEMPLATE     = 'customer/create_account/email_confirmed_template';
 	const XML_PATH_GENERATE_HUMAN_FRIENDLY_ID   = 'customer/create_account/generate_human_friendly_id';
+
+    /**
+     * 获取用户登录状态
+     */
 	public function statusAction() {
-		$customerinfo = array ();
 		if (Mage::getSingleton ( 'customer/session' )->isLoggedIn ()) {
 			$session = Mage::getSingleton("core/session")->getEncryptedSessionId();
 			$customer = Mage::getSingleton ( 'customer/session' )->getCustomer ();
@@ -26,7 +29,8 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 			$customerinfo = array (
 				'code' => 0,
 				'msg' => null,
-				'model' => array( 
+				'model' => array(
+					'entity_id' => $customer->getId(),
 					'name' => $customer->getName (),
 					'email' => $customer->getEmail (),
 					'avatar' => $customer->getMyAvatar (),
@@ -41,11 +45,15 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 			echo json_encode ( $customerinfo );
 		} else
 			echo json_encode(array(
-				'code' => 1,
+				'code' => 5,
 				'msg' => 'not user login',
 				'model'=>array () 
 			));
 	}
+
+    /**
+     * 用户登录
+     */
 	public function loginAction() {
 		$session = Mage::getSingleton ( 'customer/session' );
 		if (Mage::getSingleton ( 'customer/session' )->isLoggedIn ()) {
@@ -88,14 +96,15 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 			}
 		}
 	}
+
+    /**
+     * 用户注册
+     */
 	public function registerAction() {
 		$params = Mage::app ()->getRequest ()->getParams ();
-		
 		$session = Mage::getSingleton ( 'customer/session' );
 		$session->setEscapeMessages ( true );
-		
 		$customer = Mage::registry ( 'current_customer' );
-		
 		$errors = array ();
 		if (is_null ( $customer )) {
 			$customer = Mage::getModel ( 'customer/customer' )->setId ( null );
@@ -121,7 +130,6 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 					$session->setCustomerAsLoggedIn ( $customer );
 					$customer->sendNewAccountEmail ( 'registered', '', Mage::app ()->getStore ()->getId () );
 				}
-				
 				$addressData = $session->getGuestAddress ();
 				if ($addressData && $customer->getId ()) {
 					$address = Mage::getModel ( 'customer/address' );
@@ -130,11 +138,17 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 					$address->save ();
 					$session->unsGuestAddress ();
 				}
-				
 				echo json_encode ( array (
 						'code'=>0,
 						'msg'=>null,
-						'model'=>array () 
+						'model'=>array (
+							'entity_id' => $customer->getId(),
+							'name' => $customer->getName (),
+							'email' => $customer->getEmail (),
+							'avatar' => $customer->getMyAvatar (),
+							'tel' => $customer->getDefaultMobileNumber (),
+							'session' => Mage::getSingleton("core/session")->getEncryptedSessionId()
+						)
 				) );
 			} else {
 				echo json_encode ( array (
@@ -165,6 +179,10 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 			) );
 		}
 	}
+
+    /**
+     * 忘记密码处理
+     */
 	public function forgotpwdAction() {
 		$email = Mage::app ()->getRequest ()->getParam ( 'email' );
 		$session = Mage::getSingleton ( 'customer/session' );
@@ -176,7 +194,7 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 			$customer = Mage::getModel ( 'customer/customer' )->setWebsiteId ( Mage::app ()->getStore ()->getWebsiteId () )->loadByEmail ( $email );
 			$this->_sendEmailTemplate ( $customer,self::XML_PATH_FORGOT_EMAIL_TEMPLATE, self::XML_PATH_FORGOT_EMAIL_IDENTITY, array (
 					'customer' => $customer 
-			), $storeId );
+			), null);
 			echo json_encode ( array (
 					'code' => 0,
 					'message' => 'Request has sent to your Email.',
@@ -189,6 +207,10 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 					'model'=>array()
 			) );
 	}
+
+    /**
+     * 用户退出登录
+     */
 	public function logoutAction() {
 		try {
 			Mage::getSingleton ( 'customer/session' )->logout();
@@ -198,7 +220,9 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 		}
 	}
 
+
 	/**
+     * 判断用户是否存在
 	 * @param $email
 	 * @return bool
 	 */
@@ -237,6 +261,104 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 		$mailer->setTemplateParams($templateParams);
 		$mailer->send();
 		return $this;
+	}
+
+	/**
+	 * update user account info
+	 */
+	public function updateAccountAction(){
+		if (Mage::getSingleton ( 'customer/session' )->isLoggedIn()) {
+			$email = Mage::app()->getRequest()->getParam('email');
+			$firstname = Mage::app()->getRequest()->getParam('firstname' );
+			$lastname = Mage::app()->getRequest()->getParam('lastname');
+			$customer = Mage::getSingleton('customer/session')->getCustomer();
+			$customerForm = Mage::getModel('customer/form');
+			$customerForm->setFormCode('customer_account_edit')->setEntity($customer);
+			$userData = array(
+				'email' => $email,
+				'firstname' => $firstname,
+				'lastname' => $lastname
+			);
+			$customerErrors = $customerForm->validateData($userData);
+			if ($customerErrors !== true) {
+	            $errors = array_merge($customerErrors);
+	        } else {
+	            $customerForm->compactData($userData);
+	            $customerErrors = $customer->validate();
+	            if (is_array($customerErrors)) {
+	                $errors = array_merge($customerErrors);
+	            }
+	        }
+	        if (!empty($errors)) {
+	            echo json_encode(array('code'=>0, 'msg'=>$errors, 'model'=>array()));
+	            return ;
+	        }
+	        try {
+	        	$customer->save();
+	        	echo json_encode(array('code'=>0, 'msg'=>'success', 'model'=>array()));
+	        } catch (Mage_Core_Exception $e){
+	        	echo json_encode(array('code'=>1, 'msg'=>$e->getMessage(), 'model'=>array()));
+	        } catch (Exception $e){
+	        	echo json_encode(array('code'=>2, 'msg'=>$e->getMessage(), 'model'=>array()));
+	        }
+	    } else {
+	    	echo json_encode(array(
+				'code' => 5,
+				'msg' => 'not user login',
+				'model'=>array () 
+			));
+	    }
+	}
+
+
+
+	/**
+	 * get user account info
+	 */
+	public function getAccountInfoAction(){
+		if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+			$customer = Mage::getSingleton('customer/session')->getCustomer();
+			$userData = array(
+				'email' => $customer->getEmail(),
+				'firstname' => $customer->getFirstname(),
+				'lastname' => $customer->getLastname()
+			);
+			echo json_encode(array('code'=>0, 'msg'=>'get customer info success!', 'model'=>$userData));
+		}else{
+			echo json_encode(array(
+				'code' => 5,
+				'msg' => 'not user login',
+				'model'=>array ()
+			));
+		}
+	}
+
+
+
+	/**
+	 * update user account info
+	 */
+	public function updatePasswordAction()
+	{
+		if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+			$password = Mage::app()->getRequest()->getParam('password');
+			$customer = Mage::getSingleton('customer/session')->getCustomer();
+			$customer->setPassword($password);
+			try {
+				$customer->save();
+				echo json_encode(array('code' => 0, 'msg' => 'success', 'model' => array()));
+			} catch (Mage_Core_Exception $e) {
+				echo json_encode(array('code' => 1, 'msg' => $e->getMessage(), 'model' => array()));
+			} catch (Exception $e) {
+				echo json_encode(array('code' => 2, 'msg' => $e->getMessage(), 'model' => array()));
+			}
+		}else {
+			echo json_encode(array(
+				'code' => 5,
+				'msg' => 'not user login',
+				'model' => array()
+			));
+		}
 	}
 
 } 
