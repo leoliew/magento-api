@@ -4,18 +4,6 @@
  * User: Leo
  * Date: 15/6/4
  * Time: 下午11:40
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 47605a6... add checkout flow address
-=======
->>>>>>> 10cea00... # This is a combination of 11 commits.
-=======
-=======
->>>>>>> 47605a6... add checkout flow address
->>>>>>> 007a8c2... temp
  */
 
 
@@ -62,26 +50,4 @@ class Lading_Api_Model_Cart extends Lading_Api_Model_Abstract {
     }
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 10cea00... # This is a combination of 11 commits.
-=======
->>>>>>> 007a8c2... temp
 }
-=======
- */
->>>>>>> 90ff47e... add magento model
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-}
->>>>>>> 47605a6... add checkout flow address
-=======
->>>>>>> 10cea00... # This is a combination of 11 commits.
-=======
-=======
-}
->>>>>>> 47605a6... add checkout flow address
->>>>>>> 007a8c2... temp
