@@ -27,7 +27,11 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 					'email' => $customer->getEmail (),
 					'avatar' => $customer->getMyAvatar (),
 					'tel' => $customer->getDefaultMobileNumber (),
+<<<<<<< HEAD
 					'session' => $session
+=======
+					'session' => $session->getCustomerId()
+>>>>>>> 82e28a9... add options with product detail
 				)
 			);
 			echo json_encode ( $customerinfo );
