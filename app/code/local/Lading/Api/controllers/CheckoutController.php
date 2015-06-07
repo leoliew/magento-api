@@ -11,7 +11,7 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
 
 
     /**
-     * 获取用户地址信息
+     * get use all address list
      */
     public function getAddressListAction(){
         $quote = Mage::getSingleton('checkout/session')->getQuote();
@@ -37,7 +37,7 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
 
 
     /**
-     * 获取用户地址信息
+     * get user address list by current quote
      */
     public function getAddressByQuoteAction(){
         $quote = Mage::getSingleton('checkout/session')->getQuote();
@@ -123,6 +123,60 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
      * Get list of available shipping methods
      * @return array
      */
+    public function setBillingAction(){
+        $return_result = array (
+            'code' => 0,
+            'msg' => 'set billing address success!',
+            'model' => null
+        );
+        //TODO: complete this method
+    }
+
+    /**
+     * Get list of available shipping methods
+     * @return array
+     */
+    public function setShippingAction(){
+        $return_result = array (
+            'code' => 0,
+            'msg' => 'save shipping address success!',
+            'model' => null
+        );
+        //TODO: complete this method
+    }
+
+
+
+    /**
+     * Get list of available shipping methods
+     * @return array
+     */
+    public function setShippingMethodAction(){
+        $return_result = array (
+            'code' => 0,
+            'msg' => 'save shipping method success!',
+            'model' => null
+        );
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost('shipping_method', '');
+            $result = Mage::getSingleton('checkout/type_onepage')->saveShippingMethod($data);
+            // $result will contain error data if shipping method is empty
+            if (!$result) {
+                Mage::getSingleton('checkout/type_onepage')->getQuote()->collectTotals();
+            }
+            $return_result['model'] = $result;
+            Mage::getSingleton('checkout/type_onepage')->getQuote()->collectTotals()->save();
+
+        }
+        echo json_encode($return_result);
+    }
+
+
+
+    /**
+     * Get list of available shipping methods
+     * @return array
+     */
     public function setPayMethodAction(){
         $return_result = array (
             'code' => 0,
@@ -149,9 +203,6 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
         }
         echo json_encode($return_result);
     }
-
-
-
 
 
 
