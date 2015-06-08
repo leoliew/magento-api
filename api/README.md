@@ -76,7 +76,7 @@
 
 * [`滚动广告`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#rollingAds)
 * [`推荐给你的商品`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#recommend)
-* [`列表磁帖`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#magnetAds)
+* [`列表磁帖(包含商品列表)`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#magnetAds)
 * [`静态广告`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#staticAds)
 * [`其他用户浏览`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#otherVisits)
 * [`你浏览过的商品`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#yourVisits)
@@ -94,3 +94,18 @@
 * [`获取购物车中总金额以及优惠劵的使用情况`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#getCouponDetail)
 * [`在购物车中使用coupon优惠劵`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#useCoupon)
 * [`在购物车中取消coupon优惠劵`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+
+
+### 支付流程
+
+* [`获取可用的账单地址列表`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#getCouponDetail)
+* [`获取可用的配送地址列表`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#useCoupon)
+* [`获取当前用户已选择的配送地址和账单地址`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`获取当前系统可以选择的配送方式`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`获取当前系统可以选择的支付方式`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`设置配送地址`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`设置账单地址`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`设置配送方式`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`设置支付方式`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`订单预览`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`根据设置生成订单`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
