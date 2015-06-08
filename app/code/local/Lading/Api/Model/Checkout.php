@@ -89,7 +89,16 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
      * @return array
      */
     public function getActivePaymentMethods($quote){
-        $quote_payment_code = $quote->getPayment()->getMethodInstance()->getCode();
+//        echo '13456';
+
+//        $quote_payment_code = $quote->getPayment()->getMethodInstance()->getCode();
+
+
+
+        Mage::log ($quote->getPayment()->getData('payment_id'));
+
+//        echo $quote_payment_code;
+
         $payments = Mage::getSingleton('payment/config')->getActiveMethods();
         $methods = array();
         foreach ($payments as $paymentCode=>$paymentModel) {
@@ -99,9 +108,9 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
                     'title'   => $paymentTitle,
                     'code' => $paymentCode
                 );
-                if($paymentCode == $quote_payment_code){
-                    $methods[$paymentCode]['is_selected'] = true;
-                }
+//                if($paymentCode == $quote_payment_code){
+//                    $methods[$paymentCode]['is_selected'] = true;
+//                }
             }
         }
         return $methods;
