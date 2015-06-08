@@ -129,7 +129,27 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
             'msg' => 'set billing address success!',
             'model' => null
         );
-        //TODO: complete this method
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost('billing', array());
+            $customerAddressId = $this->getRequest()->getPost('billing_address_id', false);
+            if (isset($data['email'])) {
+                $data['email'] = trim($data['email']);
+            }
+            $result = Mage::getSingleton('checkout/type_onepage')->saveBilling($data, $customerAddressId);
+            if (!isset($result['error'])) {
+                if (Mage::getSingleton('checkout/type_onepage')->getQuote()->isVirtual()) {
+                    $result['goto_section'] = 'payment';
+                } elseif (isset($data['use_for_shipping']) && $data['use_for_shipping'] == 1) {
+                    $result['goto_section'] = 'shipping_method';
+                    $result['allow_sections'] = array('shipping');
+                    $result['duplicateBillingInfo'] = 'true';
+                } else {
+                    $result['goto_section'] = 'shipping';
+                }
+            }
+            $return_result['model'] = $result;
+        }
+        echo json_encode($return_result);
     }
 
     /**
@@ -142,7 +162,19 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
             'msg' => 'save shipping address success!',
             'model' => null
         );
-        //TODO: complete this method
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost('shipping', array());
+            $customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
+            $result = Mage::getSingleton('checkout/type_onepage')->getOnepage()->saveShipping($data, $customerAddressId);
+            if (!isset($result['error'])) {
+                $result['goto_section'] = 'shipping_method';
+                $result['update_section'] = array(
+                    'name' => 'shipping-method',
+                );
+            }
+            $return_result['model'] = $result;
+        }
+        echo json_encode($return_result);
     }
 
 
