@@ -1,4 +1,4 @@
-## 结帐 
+## coupon优惠券 
 
 <a name="getCouponDetail" />
 ### 查看购物车coupon优惠劵使用情况

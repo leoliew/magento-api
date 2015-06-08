@@ -36,6 +36,7 @@
 * [`获取商品自定义属性`](https://github.com/leoliew/magento-api/tree/master/api/product.md#getProductCustomeValue)
 * [`获取其他用户浏览记录`](https://github.com/leoliew/magento-api/tree/master/api/product.md#getOthersVisitProduct)
 * [`获取商品评论列表`](https://github.com/leoliew/magento-api/tree/master/api/product.md#listProductReview)
+* [`获取商品评论详情`](https://github.com/leoliew/magento-api/tree/master/api/product.md#ProductReview)
 * [`添加商品评论`](https://github.com/leoliew/magento-api/tree/master/api/product.md#addProductReview)
 
 
@@ -98,14 +99,14 @@
 
 ### 支付流程
 
-* [`获取可用的账单地址列表`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#getCouponDetail)
-* [`获取可用的配送地址列表`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#useCoupon)
-* [`获取当前用户已选择的配送地址和账单地址`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
-* [`获取当前系统可以选择的配送方式`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
-* [`获取当前系统可以选择的支付方式`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
-* [`设置配送地址`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
-* [`设置账单地址`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
-* [`设置配送方式`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
-* [`设置支付方式`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
-* [`订单预览`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
-* [`根据设置生成订单`](https://github.com/leoliew/magento-api/tree/master/api/coupon.md#removeCoupon)
+* [`获取可用的账单地址列表`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getBillingAddressList)
+* [`获取可用的配送地址列表`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getShippingAddressList)
+* [`获取当前用户已选择的配送地址和账单地址`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getQuoteAddress)
+* [`获取当前系统可以选择的配送方式`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getShippingMethod)
+* [`获取当前系统可以选择的支付方式`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getPaymentMethod)
+* [`设置配送地址`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#setShippingAddress)
+* [`设置账单地址`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#setBillingAddress)
+* [`设置配送方式`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#setShippingMethod)
+* [`设置支付方式`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#setPaymentMethod)
+* [`订单预览`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#orderReview)
+* [`根据设置生成订单`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#createOrder)
