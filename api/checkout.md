@@ -342,55 +342,46 @@
 ### 设置配送地址
 
 
-**`GET` `/mobileapi/Cart/useCoupon`**
+**`POST` `/mobileapi/checkout/setShipping`**
 
-在购物车中使用coupon优惠劵接口，需要带`cookies`.
+设置配送地址接口，需要带`cookies`,字段说明请参照[地址](https://github.com/leoliew/magento-api/tree/master/api/address.md#getAddressList)API文档.
 
 **_Paramers_**
 
-* `coupon_code` - 优惠劵code
+* `null` 
+
+**_Form_**
+
+* `shipping_address_id` - 配送地址id
+* `shipping[address_id]` - 配送地址id
+* `shipping[firstname]`
+* `shipping[lastname]`
+* `shipping[company]`
+* `shipping[street][]`
+* `shipping[street][]`
+* `shipping[city]`
+* `shipping[region_id]`
+* `shipping[region]`
+* `shipping[country_id]`
+* `shipping[telephone]`
+* `shipping[fax]`
+* `shipping[use_for_shipping]`
 
 **_Examples_**
 
 ```js
-/mobileapi/Cart/useCoupon?coupon_code=25OFF
+/mobileapi/checkout/setShipping
 ```
 
 **_Response_**
 
 ```js
 {
-    code: 0,
-    msg: "Coupon code "25OFF" was applied.",
-    model: {
-        subtotal: 905,
-        grand_total: 970,
-        discount: -158,
-        tax: "",
-        coupon_code: "25OFF",
-        coupon_rule: {
-            rule_id: "42",
-            name: "25% off Apparel for General customers",
-            description: "25% off any product from the apparel category",
-            from_date: "2013-05-03",
-            to_date: null,
-            uses_per_customer: "999999",
-            is_active: "1",
-            is_advanced: "1",
-            product_ids: null,
-            simple_action: "by_percent",
-            discount_amount: "25.0000",
-            discount_qty: null,
-            discount_step: "0",
-            simple_free_shipping: "0",
-            apply_to_shipping: "0",
-            times_used: "0",
-            is_rss: "1",
-            coupon_type: "2",
-            use_auto_generation: "0",
-            uses_per_coupon: null
-        }
-    }
+	"code":0,
+	"msg":"set shipping address success!",
+	"model":{
+		"goto_section":"shipping_method"
+	}
 }
 ```
 
@@ -400,56 +391,46 @@
 ### 设置账单地址
 
 
-**`GET` `/mobileapi/Cart/useCoupon`**
+**`POST` `/mobileapi/checkout/setBilling`**
 
-在购物车中使用coupon优惠劵接口，需要带`cookies`.
+设置账单地址接口，需要带`cookies`,字段说明请参照[地址](https://github.com/leoliew/magento-api/tree/master/api/address.md#getAddressList)API文档.
 
 **_Paramers_**
 
-* `coupon_code` - 优惠劵code
+* `null` 
 
+**_Form_**
+
+* `billing_address_id` - 账单地址id
+* `billing[address_id]` - 账单地址id
+* `billing[firstname]`
+* `billing[lastname]`
+* `billing[company]`
+* `billing[street][]`
+* `billing[street][]`
+* `billing[city]`
+* `billing[region_id]`
+* `billing[region]`
+* `billing[country_id]`
+* `billing[telephone]`
+* `billing[fax]`
+* `billing[use_for_shipping]`
 
 **_Examples_**
 
 ```js
-/mobileapi/Cart/useCoupon?coupon_code=25OFF
+/mobileapi/checkout/setBilling
 ```
 
 **_Response_**
 
 ```js
 {
-    code: 0,
-    msg: "Coupon code "25OFF" was applied.",
-    model: {
-        subtotal: 905,
-        grand_total: 970,
-        discount: -158,
-        tax: "",
-        coupon_code: "25OFF",
-        coupon_rule: {
-            rule_id: "42",
-            name: "25% off Apparel for General customers",
-            description: "25% off any product from the apparel category",
-            from_date: "2013-05-03",
-            to_date: null,
-            uses_per_customer: "999999",
-            is_active: "1",
-            is_advanced: "1",
-            product_ids: null,
-            simple_action: "by_percent",
-            discount_amount: "25.0000",
-            discount_qty: null,
-            discount_step: "0",
-            simple_free_shipping: "0",
-            apply_to_shipping: "0",
-            times_used: "0",
-            is_rss: "1",
-            coupon_type: "2",
-            use_auto_generation: "0",
-            uses_per_coupon: null
-        }
-    }
+	"code":0,
+	"msg":"set billing address success!",
+	"model":{
+		"goto_section":"shipping"
+	}
 }
 ```
 
@@ -459,56 +440,33 @@
 ### 设置配送方式
 
 
-**`GET` `/mobileapi/Cart/useCoupon`**
+**`GET` `/mobileapi/checkout/setShippingMethod`**
 
-在购物车中使用coupon优惠劵接口，需要带`cookies`.
+设置配送方式接口，需要带`cookies`.
 
 **_Paramers_**
 
-* `coupon_code` - 优惠劵code
+* `null`
 
+**_Form_**
+
+* `shipping_method` - 配送方式
 
 **_Examples_**
 
 ```js
-/mobileapi/Cart/useCoupon?coupon_code=25OFF
+/mobileapi/checkout/setShippingMethod
+	Form:
+		shipping_method=ups_XPD
 ```
 
 **_Response_**
 
 ```js
 {
-    code: 0,
-    msg: "Coupon code "25OFF" was applied.",
-    model: {
-        subtotal: 905,
-        grand_total: 970,
-        discount: -158,
-        tax: "",
-        coupon_code: "25OFF",
-        coupon_rule: {
-            rule_id: "42",
-            name: "25% off Apparel for General customers",
-            description: "25% off any product from the apparel category",
-            from_date: "2013-05-03",
-            to_date: null,
-            uses_per_customer: "999999",
-            is_active: "1",
-            is_advanced: "1",
-            product_ids: null,
-            simple_action: "by_percent",
-            discount_amount: "25.0000",
-            discount_qty: null,
-            discount_step: "0",
-            simple_free_shipping: "0",
-            apply_to_shipping: "0",
-            times_used: "0",
-            is_rss: "1",
-            coupon_type: "2",
-            use_auto_generation: "0",
-            uses_per_coupon: null
-        }
-    }
+	"code":0,
+	"msg":"save shipping method success!",
+	"model":[]
 }
 ```
 
@@ -518,56 +476,33 @@
 ### 设置支付方式
 
 
-**`GET` `/mobileapi/Cart/useCoupon`**
+**`GET` `/mobileapi/checkout/setPayMethod`**
 
-在购物车中使用coupon优惠劵接口，需要带`cookies`.
+设置支付方式，需要带`cookies`.
 
 **_Paramers_**
 
-* `coupon_code` - 优惠劵code
+* `null`
 
+**_Form_**
+
+* `payment[method]` - 支付方式
 
 **_Examples_**
 
 ```js
-/mobileapi/Cart/useCoupon?coupon_code=25OFF
+/mobileapi/checkout/setPayMethod
+	Form:
+		payment[method]=payu
 ```
 
 **_Response_**
 
 ```js
 {
-    code: 0,
-    msg: "Coupon code "25OFF" was applied.",
-    model: {
-        subtotal: 905,
-        grand_total: 970,
-        discount: -158,
-        tax: "",
-        coupon_code: "25OFF",
-        coupon_rule: {
-            rule_id: "42",
-            name: "25% off Apparel for General customers",
-            description: "25% off any product from the apparel category",
-            from_date: "2013-05-03",
-            to_date: null,
-            uses_per_customer: "999999",
-            is_active: "1",
-            is_advanced: "1",
-            product_ids: null,
-            simple_action: "by_percent",
-            discount_amount: "25.0000",
-            discount_qty: null,
-            discount_step: "0",
-            simple_free_shipping: "0",
-            apply_to_shipping: "0",
-            times_used: "0",
-            is_rss: "1",
-            coupon_type: "2",
-            use_auto_generation: "0",
-            uses_per_coupon: null
-        }
-    }
+	"code":0,
+	"msg":"save payment method success!",
+	"model":null
 }
 ```
 
