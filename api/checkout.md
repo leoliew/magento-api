@@ -512,56 +512,62 @@
 ### 订单预览
 
 
-**`GET` `/mobileapi/Cart/useCoupon`**
+**`GET` `/mobileapi/checkout/getOrderReview`**
 
-在购物车中使用coupon优惠劵接口，需要带`cookies`.
+订单预览接口，需要带`cookies`.
 
 **_Paramers_**
 
-* `coupon_code` - 优惠劵code
-
+* `null` 
 
 **_Examples_**
 
 ```js
-/mobileapi/Cart/useCoupon?coupon_code=25OFF
+/mobileapi/checkout/getOrderReview
 ```
 
 **_Response_**
 
 ```js
 {
-    code: 0,
-    msg: "Coupon code "25OFF" was applied.",
-    model: {
-        subtotal: 905,
-        grand_total: 970,
-        discount: -158,
-        tax: "",
-        coupon_code: "25OFF",
-        coupon_rule: {
-            rule_id: "42",
-            name: "25% off Apparel for General customers",
-            description: "25% off any product from the apparel category",
-            from_date: "2013-05-03",
-            to_date: null,
-            uses_per_customer: "999999",
-            is_active: "1",
-            is_advanced: "1",
-            product_ids: null,
-            simple_action: "by_percent",
-            discount_amount: "25.0000",
-            discount_qty: null,
-            discount_step: "0",
-            simple_free_shipping: "0",
-            apply_to_shipping: "0",
-            times_used: "0",
-            is_rss: "1",
-            coupon_type: "2",
-            use_auto_generation: "0",
-            uses_per_coupon: null
-        }
-    }
+	code: 0,
+	msg: "get order review success!",
+	model: {
+		cart_items: [
+			{
+				item_id: "419",
+				cart_item_id: "2632",
+				item_title: "Delancy Cardigan Sweater",
+				qty: 1,
+				product_type: "configurable",
+				custom_option: [
+					{
+						label: "Color",
+						value: "Taupe"
+					},
+					{
+						label: "Size",
+						value: "S"
+					}
+			],
+			thumbnail_pic_url: "http://120.24.64.28/media/catalog/product/cache/1/thumbnail/75x75/9df78eab33525d08d6e5fb8d27136e95/w/b/wbk006a.jpg",
+			item_price: "275.00"
+			}
+		],
+		selected_coupon_id: null,
+		subtotal: "275.0000",
+		grand_total: "376.7800",
+		shipping_method: {
+			carrier: "ups",
+			carrier_title: "United Parcel Service",
+			code: "ups_XPD",
+			method: "XPD",
+			method_title: "Worldwide Expedited",
+			price: "101.7800",
+			method_description: null
+		},
+		is_virtual: false
+	}
 }
 ```
 
@@ -571,19 +577,23 @@
 ### 根据设置生成订单
 
 
-**`GET` `/mobileapi/Cart/useCoupon`**
+**`POST` `/mobileapi/checkout/createOrder`**
 
-在购物车中使用coupon优惠劵接口，需要带`cookies`.
+根据设置生成订单，需要带`cookies`.
 
 **_Paramers_**
 
-* `coupon_code` - 优惠劵code
+* `null` 
 
+**_Form_**
+
+* `null` - null
+* `null` - null
 
 **_Examples_**
 
 ```js
-/mobileapi/Cart/useCoupon?coupon_code=25OFF
+/mobileapi/checkout/createOrder
 ```
 
 **_Response_**

@@ -322,7 +322,15 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
 //        $orderReviewArr['order_id'] = $this->getOnepage()->getLastOrderId();
         $orderReviewArr['selected_coupon_id'] = $quote->getCouponCode();
 //        $orderReviewArr['shipping_methods'] = $this->getShippingMethods();
-        $orderReviewArr['selected_shipping_method_id'] = $quote->getShippingAddress()->getShippingMethod();
+//        $orderReviewArr['selected_shipping_method_id'] = $quote->getShippingAddress()->getShippingMethod();
+
+        $orderReviewArr['subtotal'] = $quote->getShippingAddress()->getSubtotal();
+        $orderReviewArr['grand_total'] = $quote->getShippingAddress()->getGrandTotal();
+
+
+        $orderReviewArr['shipping_method'] = Mage::getModel('mobile/checkout')->getShippingMethodByQuote($quote);
+
+
         $orderReviewArr['is_virtual'] = $virtual_flag;
         echo json_encode(array(
             'code'=> 0,
@@ -332,7 +340,12 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
     }
 
 
-
+    /**
+     * 创建订单
+     */
+    public function createOrderAction(){
+        //TOOD: complete this method
+    }
 
 
 

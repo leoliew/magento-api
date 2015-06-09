@@ -110,5 +110,35 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
     }
 
 
+    /**
+     * get shipping detail by quote
+     * @param $quote
+     * @return array
+     */
+    public function getShippingMethodByQuote($quote){
+        $quoteShippingAddress = $quote->getShippingAddress();
+        $shippingMethod = $quoteShippingAddress->getShippingMethod();
+        if (is_null($quoteShippingAddress->getId())) {
+            $return_result['msg'] = 'shipping_address_is_not_set';
+            $return_result['code'] = 1;
+            return $return_result;
+        }
+        $rates = $quoteShippingAddress->getShippingRatesCollection();
+        $result_rates = array();
+        foreach($rates as $rate){
+            if($rate->getCode() == $shippingMethod){
+                $result_rates['carrier'] = $rate->getCarrier();
+                $result_rates['carrier_title'] = $rate->getCarrierTitle();
+                $result_rates['code'] = $rate->getCode();
+                $result_rates['method'] = $rate->getMethod();
+                $result_rates['method_title'] = $rate->getMethodTitle();
+                $result_rates['price'] = $rate->getPrice();
+                $result_rates['method_description'] = $rate->getMethodDescription();
+            }
+        }
+        return $result_rates;
+    }
+
+
 
 }
