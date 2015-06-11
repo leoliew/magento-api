@@ -573,13 +573,12 @@
 
 ---------------------------------------
 
-<a name="createOrder" />
-### 根据设置生成订单
+<a name="getFormKey" />
+### 获取页面form_key
 
+**`POST` `/mobileapi/checkout/getFormKey`**
 
-**`POST` `/mobileapi/checkout/createOrder`**
-
-根据设置生成订单，需要带`cookies`.
+获取页面form_key，需要带`cookies`.
 
 **_Paramers_**
 
@@ -587,50 +586,54 @@
 
 **_Form_**
 
-* `null` - null
-* `null` - null
+* `null` 
 
 **_Examples_**
 
 ```js
-/mobileapi/checkout/createOrder
+/mobileapi/checkout/getFormKey
 ```
 
 **_Response_**
 
 ```js
 {
-    code: 0,
-    msg: "Coupon code "25OFF" was applied.",
-    model: {
-        subtotal: 905,
-        grand_total: 970,
-        discount: -158,
-        tax: "",
-        coupon_code: "25OFF",
-        coupon_rule: {
-            rule_id: "42",
-            name: "25% off Apparel for General customers",
-            description: "25% off any product from the apparel category",
-            from_date: "2013-05-03",
-            to_date: null,
-            uses_per_customer: "999999",
-            is_active: "1",
-            is_advanced: "1",
-            product_ids: null,
-            simple_action: "by_percent",
-            discount_amount: "25.0000",
-            discount_qty: null,
-            discount_step: "0",
-            simple_free_shipping: "0",
-            apply_to_shipping: "0",
-            times_used: "0",
-            is_rss: "1",
-            coupon_type: "2",
-            use_auto_generation: "0",
-            uses_per_coupon: null
-        }
-    }
+	code: 0, 
+	msg: "get form key success!",
+	model: "q71ubHrdUdfVTxje" //form key 的值
+}
+```
+
+---------------------------------------
+
+<a name="createOrder" />
+### 根据设置生成订单
+
+
+**`POST` `/checkout/onepage/saveOrder`**
+
+根据设置生成订单，需要带`cookies`.
+
+**_Paramers_**
+
+* `form_key` - 页面formkey,防止重复提交,获取方式参照[form_key获取API](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getFormKey) 
+
+**_Form_**
+
+* `payment[method]` - 支付方式 
+
+**_Examples_**
+
+```js
+/checkout/onepage/saveOrder/form_key/q71ubHrdUdfVTxje/
+```
+
+**_Response_**
+
+```js
+{
+	"success":true, //是否成功成功
+	"error":false
 }
 ```
 
