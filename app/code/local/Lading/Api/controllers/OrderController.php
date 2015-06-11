@@ -12,48 +12,7 @@ class Lading_Api_OrderController extends Mage_Core_Controller_Front_Action {
 	public function getOrderAction() {
 		if(Mage::getSingleton ( 'customer/session' )->isLoggedIn ()){
 			$order_id = $this->getRequest ()->getParam ( 'order_id' );
-			$order = Mage::getModel("sales/order")->loadByIncrementId($order_id);
-			$items = array();
-			foreach($order->getAllVisibleItems() as $item){
-				$items[] = array(
-					'created_at' => $item->getData()['created_at'],
-					'updated_at' => $item->getData()['updated_at'],
-					'product_id' => $item->getProductId(),
-					'sku' => $item->getSku(),
-					'product_type' => $item->getProductType(),
-					'name' => $item->getName(),
-					'price' => $item->getPrice(),
-					'qty' => $item->getQtyOrdered(),
-					'pic_url' => ( string ) Mage::helper('catalog/image')->init($item->getProduct(), 'thumbnail')->resize ( 250 ),
-					'option'=>$item->getProductOptions()['attributes_info']
-				);
-
-			}
-			$payment = array(
-				'title' => $order->getPayment()->getMethodInstance()->getTitle(),
-				'code' => $order->getPayment()->getMethodInstance()->getCode(), 
-				'card_storage' => $order->getPayment()->getCardsStorage(),
-				'cards' => $order->getPayment()->getData()['method_instance']
-			);
-			$order_info = array (
-				'order_id' => $order->getRealOrderId(),
-				'created_at' => $order->getCreatedAt(),
-				'full_tax_info' => $order->getFullTaxInfo(),
-				'customer_name' => $order->getCustomerName(),
-				'shipping_address_name' => ($order->getShippingAddress()?$order->getShippingAddress()->getName():null),
-				'grand_total' => $order->getGrandTotal(),
-				'status_label' => $order->getStatusLabel(),
-				'shipping_method' => $order->getShippingMethod(),
-				'can_ship' => $order->canShip(),
-				'shipping_address' => $order->getShippingAddress()->getData(),
-				'billing_address' => $order->getBillingAddress()->getData(),
-				'payment_method' => $payment,
-				'order_currency' => $order->getOrderCurrency()->getData(),
-				'subtotal' => $order->getData()['subtotal'],
-				'shipping_amount' => $order->getData()['shipping_amount'],
-				'total_due' => $order->getTotalDue(),
-				'items' => $items
-			);
+			$order_info = Mage::getModel('mobile/order')->getOrderById($order_id);
 			echo json_encode(array('code'=>0,'msg'=>null,'model'=>$order_info));
 		}else{
 			echo json_encode(array('code'=>5,'msg'=>'no user login','model'=>null));
