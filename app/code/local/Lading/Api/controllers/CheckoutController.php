@@ -317,21 +317,50 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
 
 
     /**
-     * 创建订单
+     * get form key
      */
-    public function placeOrderAction(){
-//        echo "123456";
+    public function getFormKeyAction(){
+        $form_key = Mage::getSingleton('core/session')->getFormKey();
+        $return_result = array (
+            'code' => 0,
+            'msg' => 'get form key success!',
+            'model' => $form_key
+        );
+        echo json_encode($return_result);
+    }
 
-//        $url = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getRedirectUrl();
-//        $agree_ids = Mage::helper('checkout')->getRequiredAgreementIds();;
-        Mage::getSingleton('checkout/type_onepage')->saveOrder();
 
-        $redirectUrl = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getRedirectUrl();
-
-
-
-        echo json_encode($redirectUrl);
-        //TOOD: complete this method
+    /**
+     * Order success action
+     */
+    public function successAction()
+    {
+        $return_result = array (
+            'code' => 0,
+            'msg' => 'get success info success!',
+            'model' => null
+        );
+        $session = Mage::getSingleton('checkout/type_onepage')->getCheckout();
+        if (!$session->getLastSuccessQuoteId()) {
+            $this->_redirect('checkout/cart');
+            return;
+        }
+        $lastQuoteId = $session->getLastQuoteId();
+        $lastOrderId = $session->getLastOrderId();
+        $lastRecurringProfiles = $session->getLastRecurringProfileIds();
+        if (!$lastQuoteId || (!$lastOrderId && empty($lastRecurringProfiles))) {
+            $this->_redirect('checkout/cart');
+            $return_result['code'] = 1;
+            $return_result['msg'] = 'already load success message!';
+            echo json_encode($return_result);
+            return;
+        }
+        $order_info = Mage::getModel('mobile/order')->getOrderByEntityId($lastOrderId);
+        //$session->clear();
+        $return_result['model'] = array(
+            'order_id' => $order_info['order_id']
+        );
+        echo json_encode($return_result);
     }
 
 
