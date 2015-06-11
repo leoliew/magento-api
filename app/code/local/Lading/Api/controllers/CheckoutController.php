@@ -146,7 +146,7 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost('shipping', array());
             $customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
-            $result = Mage::getSingleton('checkout/type_onepage')->getOnepage()->saveShipping($data, $customerAddressId);
+            $result = Mage::getSingleton('checkout/type_onepage')->saveShipping($data, $customerAddressId);
             if (!isset($result['error'])) {
                 $result['goto_section'] = 'shipping_method';
                 $result['update_section'] = array(
