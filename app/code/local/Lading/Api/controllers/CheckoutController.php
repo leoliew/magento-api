@@ -65,39 +65,20 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
      * @return array
      */
     public function getShippingMethodsListAction(){
-        $shippingMethodLists = array();
         $return_result = array (
             'code' => 0,
             'msg' => 'get shipping method list success!',
             'model' => null
         );
-        $quoteShippingAddress = Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress();
-        $shippingMethod = $quoteShippingAddress->getShippingMethod();
+        $quote = Mage::getSingleton('checkout/session')->getQuote();
+        $quoteShippingAddress = $quote->getShippingAddress();
         if (is_null($quoteShippingAddress->getId())) {
             $return_result['msg'] = 'shipping_address_is_not_set';
             $return_result['code'] = 1;
+            echo json_encode($return_result);
             return;
         }
-        $rates = $quoteShippingAddress->getShippingRatesCollection();
-        foreach($rates as $rate){
-            $temp_rates = array();
-            $temp_rates['carrier'] = $rate->getCarrier();
-            $temp_rates['carrier_title'] = $rate->getCarrierTitle();
-            $temp_rates['code'] = $rate->getCode();
-            $temp_rates['method'] = $rate->getMethod();
-            $temp_rates['method_title'] = $rate->getMethodTitle();
-            $temp_rates['price'] = $rate->getPrice();
-            $temp_rates['method_description'] = $rate->getMethodDescription();
-            if($rate->getCode() == $shippingMethod){
-                $temp_rates['is_selected'] = true;
-            }
-            array_push($shippingMethodLists,$temp_rates);
-        }
-        $after_group = array();
-        foreach ( $shippingMethodLists as $value ) {
-            $after_group[$value['carrier_title']][] = $value;
-        }
-        $return_result['model'] = $after_group;
+        $return_result['model'] = Mage::getModel('mobile/checkout')->getShippingMethodListByQuote($quote);
         echo json_encode($return_result);
 
     }
@@ -323,14 +304,9 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
         $orderReviewArr['selected_coupon_id'] = $quote->getCouponCode();
 //        $orderReviewArr['shipping_methods'] = $this->getShippingMethods();
 //        $orderReviewArr['selected_shipping_method_id'] = $quote->getShippingAddress()->getShippingMethod();
-
         $orderReviewArr['subtotal'] = $quote->getShippingAddress()->getSubtotal();
         $orderReviewArr['grand_total'] = $quote->getShippingAddress()->getGrandTotal();
-
-
         $orderReviewArr['shipping_method'] = Mage::getModel('mobile/checkout')->getShippingMethodByQuote($quote);
-
-
         $orderReviewArr['is_virtual'] = $virtual_flag;
         echo json_encode(array(
             'code'=> 0,
@@ -343,10 +319,20 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
     /**
      * 创建订单
      */
-    public function createOrderAction(){
+    public function placeOrderAction(){
+//        echo "123456";
+
+//        $url = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getRedirectUrl();
+//        $agree_ids = Mage::helper('checkout')->getRequiredAgreementIds();;
+        Mage::getSingleton('checkout/type_onepage')->saveOrder();
+
+        $redirectUrl = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getRedirectUrl();
+
+
+
+        echo json_encode($redirectUrl);
         //TOOD: complete this method
     }
-
 
 
 }

@@ -111,7 +111,7 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
 
 
     /**
-     * get shipping detail by quote
+     * get shipping method detail by quote
      * @param $quote
      * @return array
      */
@@ -137,6 +137,39 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
             }
         }
         return $result_rates;
+    }
+
+
+
+    /**
+     * get shipping method list by quote
+     * @param $quote
+     * @return array
+     */
+    public function getShippingMethodListByQuote($quote){
+        $shippingMethodLists = array();
+        $quoteShippingAddress = $quote->getShippingAddress();
+        $shippingMethod = $quoteShippingAddress->getShippingMethod();
+        $rates = $quoteShippingAddress->getShippingRatesCollection();
+        foreach($rates as $rate){
+            $temp_rates = array();
+            $temp_rates['carrier'] = $rate->getCarrier();
+            $temp_rates['carrier_title'] = $rate->getCarrierTitle();
+            $temp_rates['code'] = $rate->getCode();
+            $temp_rates['method'] = $rate->getMethod();
+            $temp_rates['method_title'] = $rate->getMethodTitle();
+            $temp_rates['price'] = $rate->getPrice();
+            $temp_rates['method_description'] = $rate->getMethodDescription();
+            if($rate->getCode() == $shippingMethod){
+                $temp_rates['is_selected'] = true;
+            }
+            array_push($shippingMethodLists,$temp_rates);
+        }
+        $after_group = array();
+        foreach ( $shippingMethodLists as $value ) {
+            $after_group[$value['carrier_title']][] = $value;
+        }
+        return $after_group;
     }
 
 

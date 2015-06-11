@@ -83,7 +83,7 @@ class Lading_Api_OrderController extends Mage_Core_Controller_Front_Action {
 				$order_list[] = array(
 					'entity_id' => $order-> getEntityId(),
 					'order_id' => $order->getRealOrderId(),
-					'created_at' => $order->getCreatedAt(),
+					'created_at' => Mage::getModel('core/date')->date('Y-m-d', strtotime($order->getCreatedAt())),
 					'tax_amount' => $order->getTaxAmount(),
 					'shipping_amount' => $order->getShippingAmount(),
 					'discount_amount' => $order->getDiscountAmount(),
