@@ -343,7 +343,7 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
     /**
      * 创建订单
      */
-    public function createOrderAction(){
+    public function placeOrderAction(){
         //TOOD: complete this method
     }
 
