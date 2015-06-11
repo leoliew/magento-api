@@ -365,7 +365,7 @@
 * `shipping[country_id]`
 * `shipping[telephone]`
 * `shipping[fax]`
-* `shipping[use_for_shipping]`
+* `shipping[same_as_billing]` - 是否跟账单地址一致
 
 **_Examples_**
 
@@ -414,7 +414,7 @@
 * `billing[country_id]`
 * `billing[telephone]`
 * `billing[fax]`
-* `billing[use_for_shipping]`
+* `billing[use_for_shipping]` - 使用账单地址当作配送地址
 
 **_Examples_**
 
