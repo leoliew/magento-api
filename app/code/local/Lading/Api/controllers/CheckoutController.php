@@ -320,10 +320,17 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
      * 创建订单
      */
     public function placeOrderAction(){
-        echo "123456";
-        $url = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getRedirectUrl();
-        $agree_ids = Mage::helper('checkout')->getRequiredAgreementIds();;
-        echo json_encode($agree_ids);
+//        echo "123456";
+
+//        $url = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getRedirectUrl();
+//        $agree_ids = Mage::helper('checkout')->getRequiredAgreementIds();;
+        Mage::getSingleton('checkout/type_onepage')->saveOrder();
+
+        $redirectUrl = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getRedirectUrl();
+
+
+
+        echo json_encode($redirectUrl);
         //TOOD: complete this method
     }
 
