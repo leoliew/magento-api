@@ -108,9 +108,9 @@
 <a name="logout" />
 ### 退出登录
 
-**`GET` `/mobileapi/customer/register`**
+**`GET` `/mobileapi/customer/logout`**
 
-用户注册
+退出登录接口，需要带`cookies`
 
 **_Paramers_**
 
