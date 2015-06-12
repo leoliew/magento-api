@@ -440,7 +440,7 @@
 ### 设置配送方式
 
 
-**`GET` `/mobileapi/checkout/setShippingMethod`**
+**`POST` `/mobileapi/checkout/setShippingMethod`**
 
 设置配送方式接口，需要带`cookies`.
 
@@ -476,7 +476,7 @@
 ### 设置支付方式
 
 
-**`GET` `/mobileapi/checkout/setPayMethod`**
+**`POST` `/mobileapi/checkout/setPayMethod`**
 
 设置支付方式，需要带`cookies`.
 
@@ -573,39 +573,6 @@
 
 ---------------------------------------
 
-<a name="getFormKey" />
-### 获取页面form_key
-
-**`POST` `/mobileapi/checkout/getFormKey`**
-
-获取页面form_key，需要带`cookies`.
-
-**_Paramers_**
-
-* `null` 
-
-**_Form_**
-
-* `null` 
-
-**_Examples_**
-
-```js
-/mobileapi/checkout/getFormKey
-```
-
-**_Response_**
-
-```js
-{
-	code: 0, 
-	msg: "get form key success!",
-	model: "q71ubHrdUdfVTxje" //form key 的值
-}
-```
-
----------------------------------------
-
 <a name="createOrder" />
 ### 根据设置生成订单
 
@@ -613,6 +580,14 @@
 **`POST` `/checkout/onepage/saveOrder`**
 
 根据设置生成订单，需要带`cookies`.
+
+<a name="payFlow" />
+**_createOrderFlow_**
+
+* `get form key` - [api](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getFormKey)
+* `create order` - [api](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#createOrder)
+* `redirect to pay url` - if response have redirect url, you have to jump to this url
+* `get success info` - [get success info](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getSuccessInfo) after pay 
 
 **_Paramers_**
 
@@ -628,12 +603,57 @@
 /checkout/onepage/saveOrder/form_key/q71ubHrdUdfVTxje/
 ```
 
-**_Response_**
+**_Response_1_**
 
 ```js
 {
 	"success":true, //是否成功成功
-	"error":false
+	"error":false   //是否有错误
+}
+```
+
+**_Response_2_**
+
+```js
+{
+	"success":true, //是否支付成功
+	"error":false,  //是否有错误
+	"redirect":"http:\/\/120.24.64.28\/index.php\/payu\/payment\/redirect\/" //要重定向到的地址
+}
+```
+
+---------------------------------------
+
+<a name="getSuccessInfo" />
+### 获取支付成功后的信息
+
+**`GET` `/mobileapi/checkout/success`**
+
+获取支付成功后的信息,需要带`cookies`.
+
+**_Paramers_**
+
+* `null` 
+
+**_Form_**
+
+* `null` 
+
+**_Examples_**
+
+```js
+/mobileapi/checkout/success
+```
+
+**_Response_**
+
+```js
+{
+	code: 0,
+	msg: "get success info success!",
+	model: {
+		order_id: "145000033"  //订单id
+	}
 }
 ```
 

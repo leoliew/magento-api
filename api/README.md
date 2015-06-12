@@ -110,3 +110,10 @@
 * [`设置支付方式`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#setPaymentMethod)
 * [`订单预览`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#orderReview)
 * [`根据设置生成订单`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#createOrder)
+* [`根据设置生成订单流程`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#payFlow)
+* [`获取订单完成后的成功信息`](https://github.com/leoliew/magento-api/tree/master/api/checkout.md#getSuccessInfo)
+
+
+### 其他
+* [`获取页面提交FormKey`](https://github.com/leoliew/magento-api/tree/master/api/other.md#getFormKey)
+
