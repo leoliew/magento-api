@@ -440,7 +440,7 @@
 ### 设置配送方式
 
 
-**`GET` `/mobileapi/checkout/setShippingMethod`**
+**`POST` `/mobileapi/checkout/setShippingMethod`**
 
 设置配送方式接口，需要带`cookies`.
 
