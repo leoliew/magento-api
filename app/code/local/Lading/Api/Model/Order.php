@@ -15,9 +15,10 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
      */
     public function getOrderById($order_id) {
         $order = Mage::getModel("sales/order")->loadByIncrementId($order_id);
+        $products_model = Mage::getModel('mobile/products');
         $items = array();
         foreach($order->getAllVisibleItems() as $item){
-            $items[] = array(
+            $temp_items = array(
                 'created_at' => $item->getData()['created_at'],
                 'updated_at' => $item->getData()['updated_at'],
                 'product_id' => $item->getProductId(),
@@ -27,9 +28,12 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
                 'price' => $item->getPrice(),
                 'qty' => $item->getQtyOrdered(),
                 'pic_url' => ( string ) Mage::helper('catalog/image')->init($item->getProduct(), 'thumbnail')->resize ( 250 ),
-                'option'=>$item->getProductOptions()['attributes_info']
+                'custom_option' => $item->getProductOptions()['attributes_info']
             );
-
+            if($item->getProductType()==Mage_Catalog_Model_Product_Type::TYPE_BUNDLE){
+                $temp_items['bundle_option'] =$this->getProductBundleOptions($item);
+            }
+            array_push($items,$temp_items);
         }
         $payment = array(
             'title' => $order->getPayment()->getMethodInstance()->getTitle(),
@@ -47,9 +51,11 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
             'status_label' => $order->getStatusLabel(),
             'shipping_method' => $order->getShippingMethod(),
             'can_ship' => $order->canShip(),
-            'shipping_address' => $order->getShippingAddress()->getData(),
-            'billing_address' => $order->getBillingAddress()->getData(),
-            'payment_method' => $payment,
+            'address' => array(
+                'shipping_address' => $order->getShippingAddress()->getData(),
+                'billing_address' => $order->getBillingAddress()->getData(),
+            ),
+            'pay_method' => $payment,
             'order_currency' => $order->getOrderCurrency()->getData(),
             'subtotal' => $order->getData()['subtotal'],
             'shipping_amount' => $order->getData()['shipping_amount'],
@@ -100,9 +106,11 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
             'status_label' => $order->getStatusLabel(),
             'shipping_method' => $order->getShippingMethod(),
             'can_ship' => $order->canShip(),
-            'shipping_address' => $order->getShippingAddress()->getData(),
-            'billing_address' => $order->getBillingAddress()->getData(),
-            'payment_method' => $payment,
+            'address' => array(
+                'shipping_address' => $order->getShippingAddress()->getData(),
+                'billing_address' => $order->getBillingAddress()->getData(),
+            ),
+            'pay_method' => $payment,
             'order_currency' => $order->getOrderCurrency()->getData(),
             'subtotal' => $order->getData()['subtotal'],
             'shipping_amount' => $order->getData()['shipping_amount'],
@@ -110,6 +118,26 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
 //            'items' => $items
         );
         return $order_info;
+    }
+
+
+
+    /**
+     * 获取账单
+     * @return mixed
+     */
+    public function getProductBundleOptions($item) {
+        $bundle_option = array();
+        $options = $item->getProductOptions();
+        foreach ( $options['bundle_options'] as $option ) {
+            $temp_options = array();
+            $temp_options['label'] = $option['label'];
+            foreach ($option['value'] as $sub){
+                $temp_options['value'] =  $sub['qty'] . " x " . $sub['title'] . " " . $sub['price'];
+            }
+            array_push($bundle_option,$temp_options);
+        }
+        return $bundle_option;
     }
 
 }
