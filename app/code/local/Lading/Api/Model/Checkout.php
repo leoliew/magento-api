@@ -89,7 +89,7 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
      * @return array
      */
     public function getActivePaymentMethods($quote){
-        if ($quote->getPayment()->getId()){
+        if ($quote->getPayment()->getMethod()){
             $quote_payment_code = $quote->getPayment()->getMethodInstance()->getCode();
         }
         $payments = Mage::getSingleton('payment/config')->getActiveMethods();
