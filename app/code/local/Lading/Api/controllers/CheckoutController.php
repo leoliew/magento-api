@@ -301,10 +301,12 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
         }
         $orderReviewArr['cart_items'] = $cartItemsArr;
 //        $orderReviewArr['order_id'] = $this->getOnepage()->getLastOrderId();
-        $orderReviewArr['selected_coupon_id'] = $quote->getCouponCode();
-//        $orderReviewArr['shipping_methods'] = $this->getShippingMethods();
+        $orderReviewArr['coupon'] = Mage::getModel('mobile/checkout')->getCouponByQuote($quote);
+        $orderReviewArr['pay_method'] = Mage::getModel('mobile/checkout')->getPaymentMethodByQuote($quote);
+        $orderReviewArr['address'] = Mage::getModel('mobile/checkout')->getAddressByQuote($quote);
 //        $orderReviewArr['selected_shipping_method_id'] = $quote->getShippingAddress()->getShippingMethod();
         $orderReviewArr['subtotal'] = $quote->getShippingAddress()->getSubtotal();
+        $orderReviewArr['base_discount_amount'] = $quote->getShippingAddress()->getBaseDiscountAmount();
         $orderReviewArr['grand_total'] = $quote->getShippingAddress()->getGrandTotal();
         $orderReviewArr['shipping_method'] = Mage::getModel('mobile/checkout')->getShippingMethodByQuote($quote);
         $orderReviewArr['is_virtual'] = $virtual_flag;

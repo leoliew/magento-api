@@ -25,17 +25,21 @@ class Lading_Api_OrderController extends Mage_Core_Controller_Front_Action {
 	 */
 	public function getOrderListAction(){
 		$status = $this->getRequest ()->getParam ( 'status' );
+		$order = ($this->getRequest ()->getParam ( 'order' )) ? ($this->getRequest ()->getParam ( 'order' )) : 'created_at';
+		$dir = ($this->getRequest ()->getParam ( 'dir' )) ? ($this->getRequest ()->getParam ( 'dir' )) : 'desc';
 		if(Mage::getSingleton ( 'customer/session' )->isLoggedIn ()){
 			$customer_id = Mage::getSingleton('customer/session')->getCustomer()->getId();
 			if(is_null($status)){
 				$orders = Mage::getModel("sales/order")->getCollection()
 					->addAttributeToSelect('*')
-					->addFieldToFilter('customer_id', $customer_id);
+					->addFieldToFilter('customer_id', $customer_id)
+					->addAttributeToSort ( $order, $dir );
 			}else{
 				$orders = Mage::getModel("sales/order")->getCollection()
 					->addAttributeToSelect('*')
 					->addFieldToFilter('customer_id', $customer_id)
-					->addFieldToFilter('status', $status);
+					->addFieldToFilter('status', $status)
+					->addAttributeToSort ( $order, $dir );
 			}
 			$order_list = array();
 			foreach ($orders as $order) {

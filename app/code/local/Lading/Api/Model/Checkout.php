@@ -174,4 +174,66 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
 
 
 
+    /**
+     * get payment method by quote
+     * @param $quote
+     * @return array
+     */
+    public function getPaymentMethodByQuote($quote){
+        if ($quote->getPayment()->getMethod()){
+            $quote_payment_code = $quote->getPayment()->getMethodInstance()->getCode();
+        }
+        $payments = Mage::getSingleton('payment/config')->getActiveMethods();
+        $method = array();
+        foreach ($payments as $paymentCode=>$paymentModel) {
+            $paymentTitle = Mage::getStoreConfig('payment/'.$paymentCode.'/title');
+            if(($paymentCode != 'free') && ($paymentCode == $quote_payment_code)){
+                $method['title'] = $paymentTitle;
+                $method['code'] = $paymentCode;
+            }
+        }
+        return $method;
+    }
+
+
+    /**
+     * get payment method by quote
+     * @param $quote
+     * @return array
+     */
+    public function getCouponByQuote($quote){
+        $coupon =  array();
+        $coupon_code = $quote->getCouponCode();
+        if($coupon_code){
+            $oCoupon = Mage::getModel ( 'salesrule/coupon' )->load ( $coupon_code, 'code' );
+            $oRule = Mage::getModel ( 'salesrule/rule' )->load ( $oCoupon->getRuleId ());
+            $coupon['coupon_code'] = $coupon_code;
+            $coupon['coupon_rule'] = array(
+                'rule_id' => $oRule->getData()['rule_id'],
+                'name' => $oRule->getData()['name'],
+                'description'=> $oRule->getData()['description'],
+                'from_date'=> $oRule->getData()['from_date'],
+                'to_date'=> $oRule->getData()['to_date'],
+                'uses_per_customer'=> $oRule->getData()['uses_per_customer'],
+                'is_active'=> $oRule->getData()['is_active'],
+                'is_advanced'=> $oRule->getData()['is_advanced'],
+                'product_ids'=> $oRule->getData()['product_ids'],
+                'simple_action'=> $oRule->getData()['simple_action'],
+                'discount_amount'=> $oRule->getData()['discount_amount'],
+                'discount_qty'=> $oRule->getData()['discount_qty'],
+                'discount_step'=> $oRule->getData()['discount_step'],
+                'simple_free_shipping'=> $oRule->getData()['simple_free_shipping'],
+                'apply_to_shipping'=> $oRule->getData()['apply_to_shipping'],
+                'times_used'=> $oRule->getData()['times_used'],
+                'is_rss'=> $oRule->getData()['is_rss'],
+                'coupon_type'=> $oRule->getData()['coupon_type'],
+                'use_auto_generation'=> $oRule->getData()['use_auto_generation'],
+                'uses_per_coupon'=> $oRule->getData()['uses_per_coupon']
+            );
+        }
+        return $coupon;
+    }
+
+
+
 }
