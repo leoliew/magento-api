@@ -299,7 +299,7 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
             }
             array_push($cartItemsArr, $cartItemArr);
         }
-        $orderReviewArr['cart_items'] = $cartItemsArr;
+        $orderReviewArr['items'] = $cartItemsArr;
 //        $orderReviewArr['order_id'] = $this->getOnepage()->getLastOrderId();
         $orderReviewArr['coupon'] = Mage::getModel('mobile/checkout')->getCouponByQuote($quote);
         $orderReviewArr['pay_method'] = Mage::getModel('mobile/checkout')->getPaymentMethodByQuote($quote);
