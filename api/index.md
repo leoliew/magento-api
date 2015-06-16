@@ -141,7 +141,7 @@
 ---------------------------------------
 
 <a name="catelogSale" />
-### 指定目录的产品列表
+### 指定目录的产品列表(二级类目)
 
 **`GET` `/mobileapi/index/index`**
 
@@ -325,46 +325,3 @@
 ```
 
 ---------------------------------------
-
-<a name="getSecProduct" />
-### 获取二级菜单的商品
-
-**`GET` `/mobileapi/index/index`**
-
-获取二级菜单的商品，不需要带`cookies`.
-
-**_Paramers_**
-
-* `cmd` - 后台参数
-* `categoryid` - 二级类目id
-
-**_Examples_**
-
-```js
-/mobileapi/index/index?cmd=catalog&categoryid=10
-```
-
-**_Response_**
-
-```js
-{
-    code: 0, //0是成功，非0都是失败
-    msg: null, //错误信息，null代表没有
-    model: [
-        {
-            entity_id: "284", //商品id
-            sku: "wbk002L", //商品编号
-            name: "Black NoLIta Cami", //商品名称
-            news_from_date: "2013-05-08 00:00:00", //新品开始时间
-            news_to_date: null, //新品结束时间
-            special_from_date: "2013-03-05 00:00:00", //特价开始时间
-            special_to_date: null, //特价结束时间
-            image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/w/b/wbk002t.jpg", //图片链接
-            url_key: "http://120.24.64.28/nolita-cami-590.html", //商品url
-            regular_price_with_tax: "150.00", //原价
-            final_price_with_tax: "120.00", //当前商品价格，在特价周期内的价格，不在周期内为原价，0则表示没有特价
-            symbol: "$" //货币符号
-        }
-    ］
-}
-```
