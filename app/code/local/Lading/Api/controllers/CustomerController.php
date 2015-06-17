@@ -66,11 +66,9 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 		} catch ( Mage_Core_Exception $e ) {
 			switch ($e->getCode ()) {
 				case Mage_Customer_Model_Customer::EXCEPTION_EMAIL_NOT_CONFIRMED :
-					$value = Mage::helper ( 'customer' )->getEmailConfirmationUrl ( $uname );
-					$message = Mage::helper ( 'customer' )->__ ( 'This account is not confirmed. %s', $value );
 					echo json_encode ( array (
 							'code' => 1,
-							'msg' => $message,
+							'msg' => 'This account is not confirmed.',
 							'model'=>array () 
 					) );
 					break;
@@ -88,7 +86,7 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 							'code' => 1,
 							'msg' => $message,
 							'model'=>array () 
-					) );
+					));
 			}
 		}
 	}
@@ -337,16 +335,30 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 	public function updatePasswordAction()
 	{
 		if (Mage::getSingleton('customer/session')->isLoggedIn()) {
-			$password = Mage::app()->getRequest()->getParam('password');
+			$password = $_REQUEST['password'];
+			$new_password = $_REQUEST['new_password'];
 			$customer = Mage::getSingleton('customer/session')->getCustomer();
-			$customer->setPassword($password);
+			$storeId = Mage::app()->getStore()->getStoreId();
+			$websiteId = Mage::getModel('core/store')->load($storeId)->getWebsiteId();
 			try {
-				$customer->save();
-				echo json_encode(array('code' => 0, 'msg' => 'success', 'model' => array()));
-			} catch (Mage_Core_Exception $e) {
-				echo json_encode(array('code' => 1, 'msg' => $e->getMessage(), 'model' => array()));
-			} catch (Exception $e) {
-				echo json_encode(array('code' => 2, 'msg' => $e->getMessage(), 'model' => array()));
+				$login_customer_result = Mage::getModel('customer/customer')->setWebsiteId($websiteId)->authenticate($customer->getEmail(), $password);
+				$validate = 0;
+			}
+			catch(Exception $ex) {
+				$validate = 1;
+			}
+			if($password && $new_password && ($validate == 0)){
+				$customer->setPassword($new_password);
+				try {
+					$customer->save();
+					echo json_encode(array('code' => 0, 'msg' => 'success', 'model' => array()));
+				} catch (Mage_Core_Exception $e) {
+					echo json_encode(array('code' => 1, 'msg' => $e->getMessage(), 'model' => array()));
+				} catch (Exception $e) {
+					echo json_encode(array('code' => 2, 'msg' => $e->getMessage(), 'model' => array()));
+				}
+			}else{
+				echo json_encode(array('code' => 2, 'msg' => 'password is not correct ', 'model' => array()));
 			}
 		}else {
 			echo json_encode(array(
