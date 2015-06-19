@@ -109,6 +109,9 @@ class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
 		}
 		$items = array ();
 		foreach ( $wishlist->getItemCollection () as $item ) {
+
+			echo $item->getProductId();
+
 			$item = Mage::getModel ( 'catalog/product' )->setStoreId ( $item->getStoreId () )->load ( $item->getProductId () );
 			if ($item->getId ()) {
 				$items [] = array (
