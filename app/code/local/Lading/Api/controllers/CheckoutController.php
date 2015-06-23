@@ -128,6 +128,10 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
                     $result['goto_section'] = 'shipping';
                 }
             }
+            if ($result['error']){
+                $return_result['code'] = 1;
+                $return_result['msg'] = $result['message'];
+            }
             $return_result['model'] = $result;
         }
         echo json_encode($return_result);
@@ -176,6 +180,9 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
             // $result will contain error data if shipping method is empty
             if (!$result) {
                 Mage::getSingleton('checkout/type_onepage')->getQuote()->collectTotals();
+            }
+            if ($result['error']){
+                $return_result['msg'] = $result['message'];
             }
             $return_result['model'] = $result;
             Mage::getSingleton('checkout/type_onepage')->getQuote()->collectTotals()->save();

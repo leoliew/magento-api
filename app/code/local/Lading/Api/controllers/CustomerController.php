@@ -284,12 +284,12 @@ class Lading_Api_CustomerController extends Mage_Core_Controller_Front_Action {
 	            }
 	        }
 	        if (!empty($errors)) {
-	            echo json_encode(array('code'=>0, 'msg'=>$errors, 'model'=>array()));
+	            echo json_encode(array('code'=>1, 'msg'=>$errors, 'model'=>array()));
 	            return ;
 	        }
 	        try {
 	        	$customer->save();
-	        	echo json_encode(array('code'=>0, 'msg'=>'success', 'model'=>array()));
+	        	echo json_encode(array('code'=>0, 'msg'=>'success', 'model'=>$userData));
 	        } catch (Mage_Core_Exception $e){
 	        	echo json_encode(array('code'=>1, 'msg'=>$e->getMessage(), 'model'=>array()));
 	        } catch (Exception $e){
