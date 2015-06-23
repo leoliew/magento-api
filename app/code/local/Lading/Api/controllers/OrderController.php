@@ -52,6 +52,7 @@ class Lading_Api_OrderController extends Mage_Core_Controller_Front_Action {
 					'discount_amount' => $order->getDiscountAmount(),
 					'subtotal' => $order->getSubtotal(),
 					'grand_total' => $order->getGrandTotal(),
+					'symbol' => Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol (),
 					'total_qty_ordered' => $order->getTotalQtyOrdered(),
 					'shipping_address_name' => ($order->getShippingAddress()?$order->getShippingAddress()->getName():null),
 					'status' => $order->getStatusLabel(),
