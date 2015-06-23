@@ -1,70 +1,51 @@
 <?php
 class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
-    /**
+
+	/**
      * add item to user wish list
      */
-	public function addToWishlistAction() {
-		$response = array ();
+	public function addAction() {
+		$return_result = array(
+			'code' => 0,
+			'msg' => null,
+			'model' => null
+		);
 		if (! Mage::getStoreConfigFlag('wishlist/general/active')) {
-			$response ['code'] = 1;
-			$response ['msg'] = $this->__('Wishlist Has Been Disabled By Admin');
+			$return_result ['code'] = 1;
+			$return_result ['msg'] = 'Wishlist Has Been Disabled By Admin';
+			echo json_encode($return_result);
+			return;
 		}
 		if (! Mage::getSingleton('customer/session')->isLoggedIn()) {
-			$response ['code'] = 5;
-			$response ['msg'] = $this->__('Please Login First');
+			$return_result ['code'] = 5;
+			$return_result ['msg'] = 'Please Login First';
+			echo json_encode($return_result);
+			return;
 		}
-		if (empty ( $response )) {
-			$session = Mage::getSingleton('customer/session');
-			$wishlist = $this->_getWishlist();
-			if (! $wishlist) {
-				$response ['code'] = 2;
-				$response ['msg'] = $this->__('Unable to Create Wishlist');
-			} else {
-				$productId = ( int ) $this->getRequest()->getParam('product');
-				if (! $productId) {
-					$response ['code'] = 2;
-					$response ['msg'] = $this->__('Product Not Found');
-				} else {
-					$product = Mage::getModel('catalog/product' )->load($productId);
-					if (! $product->getId() || ! $product->isVisibleInCatalog()) {
-						$response ['code'] = 2;
-						$response ['msg'] = $this->__('Cannot specify product.');
-					} else {
-						try {
-							$requestParams = $this->getRequest()->getParams();
-							$buyRequest = new Varien_Object($requestParams);
-							$result = $wishlist->addNewItem($product, $buyRequest);
-							if (is_string($result)){
-								Mage::throwException( $result );
-							}
-							$wishlist->save ();
-
-							Mage::dispatchEvent('wishlist_add_product', array (
-								'wishlist' => $wishlist,
-								'product' => $product,
-								'item' => $result
-							));
-							Mage::helper( 'wishlist' )->calculate();
-							$message = $this->__ ( '%1$s has been added to your wishlist.', $product->getName (), $referer );
-							$response ['code'] = 0;
-							$response ['msg'] = $message;
-							Mage::unregister ( 'wishlist' );
-						} catch ( Mage_Core_Exception $e ) {
-							$response ['code'] = 2;
-							$response ['msg'] = $this->__ ( 'An error occurred while adding item to wishlist: %s', $e->getMessage () );
-						} catch ( Exception $e ) {
-							mage::log ( $e->getMessage () );
-							$response ['code'] = 2;
-							$response ['msg'] = $this->__ ( 'An error occurred while adding item to wishlist.' );
-						}
-					}
-				}
+		$customer_id = Mage::getSingleton('customer/session')->getId();
+		$customer = Mage::getModel('customer/customer');
+		$wishlist = Mage::getModel('wishlist/wishlist');
+		$product  = Mage::getModel('catalog/product');
+		$product_id  = $_GET['product_id'];
+		$customer->load($customer_id);
+		$wishlist->loadByCustomer($customer_id);
+		if($customer_id && $product_id){
+			$res = $wishlist->addNewItem($product->load($product_id));
+			if($res){
+				$return_result['code'] = 0;
+				$return_result['msg'] = "your product has been added in wishlist";
+				$return_result['model'] = $res;
 			}
+			echo json_encode($return_result);
+		}else{
+			$return_result['code'] = 1;
+			$return_result['msg'] = 'can not get customer info or product id';
+			$return_result['model'] = null;
+			echo json_encode($return_result);
 		}
-		// echo $this->getResponse ()->setBody ( Mage::helper ( 'core' )->jsonEncode ( $response ) );
-		echo json_encode( $response );
-		return;
 	}
+
+
 
     /**
      * get user wish list action
@@ -113,11 +94,14 @@ class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
 			if ($item->getId ()) {
 				$items [] = array (
 					'name' => $item->getName (),
+					'image_url' => $item->getImageUrl (),
+					'url_key' => $item->getProductUrl (),
 					'entity_id' => $item->getId (),
 					'regular_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $item->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
 					'final_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $item->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
 					'sku' => $item->getSku(),
-					'symbol' => Mage::app()->getLocale()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol ()
+					'symbol' => Mage::app()->getLocale()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol (),
+					'short_description' => $item->getShortDescription()
 				);
 			}
 		}
