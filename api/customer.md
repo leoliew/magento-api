@@ -177,18 +177,26 @@
 <a name="updatePassword" />
 ### 修改密码
 
-**`GET` `/mobileapi/customer/updatePassword`**
+**`POST` `/mobileapi/customer/updatePassword`**
 
 用户修改密码
 
 **_Paramers_**
 
-* `password` - 用户密码
+* `null` 
+
+**_Form_**
+
+* `password` - 用户当前的密码
+* `new_password` - 用户的新密码
 
 **_Examples_**
 
 ```js
-/mobileapi/customer/updatePassword?password=123456
+/mobileapi/customer/updatePassword
+    Form:
+        password=123456
+        new_password=1234567
 ```
 
 **_Response_**
