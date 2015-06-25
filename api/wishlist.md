@@ -14,7 +14,7 @@
 **_Examples_**
 
 ```js
-/mobileapi/wishlist/get
+/mobileapi/wishlist/getWishlist
 ```
 
 **_Response_**
