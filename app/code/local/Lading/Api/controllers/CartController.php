@@ -62,12 +62,22 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
      */
     public function removeCartAction(){
     	$id = $this->getRequest ()->getParam ( 'cart_item_id' );
-        Mage::getSingleton('checkout/cart')->removeItem($id)->save();
-        echo json_encode(array(
-            'code' => 0,
-            'msg'  => Mage::getModel('checkout/cart')->save(),
-            'model' => null
-        ));
+		$return_result = array(
+			'code' => 0,
+			'msg'  => 'delete cart '.$id.' from carts success',
+			'model' => null
+		);
+		if(Mage::getSingleton ( 'customer/session' )->isLoggedIn ()){
+			Mage::getSingleton('checkout/cart')->removeItem($id)->save();
+			Mage::getModel('checkout/cart')->save();
+			$return_result['model'] = array(
+				'items_qty' => $items_qty = floor (Mage::getModel('checkout/cart')->getQuote()->getItemsQty())
+			);
+		}else{
+			$return_result['code'] = 5;
+			$return_result['msg'] = 'not user login';
+		}
+		echo json_encode($return_result);
     }
 
     /**
