@@ -240,14 +240,19 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 	public function getProductList($products, $mod = 'product') {
 		$baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
 		$currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
+		$store_id = Mage::app()->getStore()->getId();
 		foreach ( $products as $product ) {
 			if ($mod == 'catalog') {
 				$product = Mage::getModel ( 'catalog/product' )->load ( $product ['entity_id'] );
 			}
+
+			$summaryData = Mage::getModel('review/review_summary')->setStoreId($store_id)  ->load($product->getId());
 			$product_list [] = array (
 				'entity_id' => $product->getId (),
 				'sku' => $product->getSku (),
 				'name' => $product->getName (),
+				'rating_summary' => $summaryData->getRatingSummary(),
+				'reviews_count' => $summaryData->getReviewsCount(),
 				'news_from_date' => $product->getNewsFromDate (),
 				'news_to_date' => $product->getNewsToDate (),
 				'special_from_date' => $product->getSpecialFromDate (),

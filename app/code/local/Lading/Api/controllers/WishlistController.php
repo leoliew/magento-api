@@ -80,7 +80,6 @@ class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
 			$customer_id =  Mage::getSingleton ( 'customer/session' )->getCustomer ()->getId();
 			$item_collection = Mage::getModel('wishlist/item')->getCollection()->addCustomerIdFilter($customer_id);
 			foreach($item_collection as $item) {
-				Mage::log($item->getProductId());
 				if($item->getProductId()==$product_id){
 					$item->delete();
 				}
