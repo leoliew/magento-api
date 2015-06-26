@@ -15,7 +15,7 @@
 **_Examples_**
 
 ```js
-/mobileapi/products/getproductdetail?productid=421
+/mobileapi/products/getproductdetail?product_id=421
 ```
 
 **_Response_**
@@ -29,6 +29,8 @@
             entity_id: "284", //商品id
             sku: "wbk002L", //商品编号
             name: "Black NoLIta Cami", //商品名称
+            rating_summary: "100", //总体评分（100分为满分）
+            reviews_count: "3", //多少人评论
             news_from_date: "2013-05-08 00:00:00", //新品开始时间
             news_to_date: null, //新品结束时间
             special_from_date: "2013-03-05 00:00:00", //特价开始时间
