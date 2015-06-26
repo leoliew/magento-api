@@ -224,9 +224,11 @@
 
 ```js
 {
-    code: 0,  //0是成功，非0都是失败
-    msg: { }, //显示返回信息
-    model: null 
+    code: 0,
+    msg: "delete product 2851 from cart success",
+    model: {
+        items_qty: 0
+    }
 }
 ```
 
