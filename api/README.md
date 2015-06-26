@@ -87,7 +87,7 @@
 
 * [`获取wishlist`](https://github.com/leoliew/magento-api/tree/master/api/wishlist.md#getWishlist)
 * [`加入wishlist`](https://github.com/leoliew/magento-api/tree/master/api/wishlist.md#addWishlist)
-* [`删除wishlist`](https://github.com/leoliew/magento-api/tree/master/api/wishlist.md#removeWishlist)
+* [`删除wishlist`](https://github.com/leoliew/magento-api/tree/master/api/wishlist.md#deleteWishlist)
 
 
 ### coupon优惠券

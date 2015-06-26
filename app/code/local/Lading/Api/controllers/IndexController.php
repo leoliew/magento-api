@@ -15,26 +15,32 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				$_categorylist = array ();
 				if (count ( $_categories ) > 0) {
 					foreach ( $_categories as $_category ) {
-						$_helper->getCategoryUrl ( $_category );
-						$childMenu = Mage::getModel ( 'catalog/category' )->load ( $_category->getId () )->getAllChildren ();
-						$childMenu = explode(',', $childMenu);
-						array_shift($childMenu);
-						$child = array();
-						foreach($childMenu as $childSec){
-							$child[$childSec] = Mage::getModel ( 'catalog/category' )->load ( $childSec )->getName();
+						if(Mage::getModel('mobile/menu')->_hasProducts($_category->getId())) {
+							$_helper->getCategoryUrl($_category);
+							$childMenu = Mage::getModel('catalog/category')->load($_category->getId())->getAllChildren();
+							$childMenu = explode(',', $childMenu);
+							array_shift($childMenu);
+							$child = array();
+							foreach ($childMenu as $childSec) {
+								//判断子级类目是否有商品
+								if (Mage::getModel('mobile/menu')->_hasProducts($childSec)) {
+									$child[$childSec] = Mage::getModel('catalog/category')->load($childSec)->getName();
+								}
+							}
+							$child = (object)$child;
+							$_categorylist [] = array(
+								'category_id' => $_category->getId(),
+								'name' => $_category->getName(),
+								'is_active' => $_category->getIsActive(),
+								'position ' => $_category->getPosition(),
+								'level ' => $_category->getLevel(),
+								'url_key' => Mage::getModel('catalog/category')->load($_category->getId())->getUrlPath(),
+								'thumbnail_url' => Mage::getModel('catalog/category')->load($_category->getId())->getThumbnailUrl(),
+								'image_url' => Mage::getModel('catalog/category')->load($_category->getId())->getImageUrl(),
+								// 'children' => Mage::getModel ( 'catalog/category' )->load ( $_category->getId () )->getAllChildren (),
+								'child' => $child
+							);
 						}
-						$_categorylist [] = array (
-							'category_id' => $_category->getId (),
-							'name' => $_category->getName (),
-							'is_active' => $_category->getIsActive (),
-							'position ' => $_category->getPosition (),
-							'level ' => $_category->getLevel (),
-							'url_key' => Mage::getModel ( 'catalog/category' )->load ( $_category->getId () )->getUrlPath (),
-							'thumbnail_url' => Mage::getModel ( 'catalog/category' )->load ( $_category->getId () )->getThumbnailUrl (),
-							'image_url' => Mage::getModel ( 'catalog/category' )->load ( $_category->getId () )->getImageUrl (),
-							// 'children' => Mage::getModel ( 'catalog/category' )->load ( $_category->getId () )->getAllChildren (),
-							'child' => $child
-						);
 					}
 				}
 				echo json_encode (array('code'=>0, 'msg'=>null ,'model'=>$_categorylist));

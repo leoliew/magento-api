@@ -68,6 +68,40 @@ class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
 		}
 	}
 
+
+
+
+	/**
+	 * delete wish list action
+	 */
+	public function delAction(){
+		$product_id  = $_GET['product_id'];
+		if (Mage::getSingleton('customer/session')->isLoggedIn()) {
+			$customer_id =  Mage::getSingleton ( 'customer/session' )->getCustomer ()->getId();
+			$item_collection = Mage::getModel('wishlist/item')->getCollection()->addCustomerIdFilter($customer_id);
+			foreach($item_collection as $item) {
+				Mage::log($item->getProductId());
+				if($item->getProductId()==$product_id){
+					$item->delete();
+				}
+			}
+			echo json_encode(
+				array(
+					'code' => 0,
+					'msg' => 'delete wish list product '.$product_id.' success!',
+					'model' => $this->_getWishlist()
+				)
+			);
+		}else{
+			echo json_encode(array(
+				'code' => 5,
+				'msg' => 'not user login',
+				'model'=>array ()
+			));
+		}
+	}
+
+
     /**
      * get wish list method
      * @return array|bool
