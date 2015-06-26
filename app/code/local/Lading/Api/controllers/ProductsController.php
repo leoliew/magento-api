@@ -64,6 +64,7 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
         $product_id = $this->getRequest ()->getParam ( 'product_id' );
         $products_model = Mage::getModel('mobile/products');
         $product = Mage::getModel ( "catalog/product" )->load ( $product_id );
+        $store_id = Mage::app()->getStore()->getId();
         $product_detail = array();
         $options = array();
         $price = array();
@@ -96,7 +97,10 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
         foreach($product->getMediaGalleryImages()->getItems() as $image){
             $mediaGallery[] = $image['url'];
         }
+        $summaryData = Mage::getModel('review/review_summary')->setStoreId($store_id)  ->load($product->getId());
         $product_detail['entity_id'] = $product->getId ();
+        $product_detail['rating_summary'] = $summaryData->getRatingSummary();
+        $product_detail['reviews_count'] = $summaryData->getReviewsCount();
         $product_detail['sku'] = $product->getSku ();
         $product_detail['status'] = $product->getStatus();
         $product_detail['name'] = $product->getName ();
