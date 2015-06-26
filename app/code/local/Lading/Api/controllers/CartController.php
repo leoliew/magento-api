@@ -46,7 +46,7 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 				echo json_encode($result);
 				return;
 			} catch ( Exception $e ) {
-				$result = array("code"=>0, "msg"=>$e->getMessage () , "model"=>null);
+				$result = array("code"=>1, "msg"=>$e->getMessage () , "model"=>null);
 				echo json_encode($result);
 				return;
 			}
@@ -162,9 +162,6 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 			) );
 			return;
 		}
-		if (Mage::app ()->getRequest()->getParam() == 1) {
-			$couponCode = '';
-		}
 		$oldCouponCode = $cart->getQuote()->getCouponCode();
 		if (! strlen ( $couponCode ) && ! strlen ( $oldCouponCode )) {
 			echo json_encode ( array (
@@ -231,6 +228,7 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 			$cartInfo ['cart_items_count'] = Mage::helper ( 'checkout/cart' )->getSummaryCount ();
 			$cartInfo ['payment_methods'] = $this->_getPaymentInfo ();
 			$cartInfo ['allow_guest_checkout'] = Mage::helper ( 'checkout' )->isAllowedGuestCheckout ( $cart->getQuote () );
+			$cartInfo ['symbol'] = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
 			echo json_encode (array('code'=>0, 'msg'=>$message, 'model'=>$cartInfo));
 		}else{
 			echo json_encode(array(

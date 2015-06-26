@@ -57,9 +57,11 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
             ),
             'pay_method' => $payment,
             'order_currency' => $order->getOrderCurrency()->getData(),
+            'symbol' => Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(),
             'subtotal' => $order->getData()['subtotal'],
             'shipping_amount' => $order->getData()['shipping_amount'],
             'total_due' => $order->getTotalDue(),
+            'coupon' =>  Mage::getModel('mobile/checkout')->getCouponByCode($order->getCouponCode()),
             'items' => $items
         );
         return $order_info;

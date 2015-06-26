@@ -102,3 +102,57 @@
     model: null
 }
 ```
+
+---------------------------------------
+
+<a name="deleteWishlist" />
+### 把商品从wishlist删除
+
+**`GET` `/mobileapi/wishlist/del`**
+
+把商品从wishlist删除，需要带`cookies`.
+
+**_Paramers_**
+
+* `product_id` - 商品id
+
+**_Examples_**
+
+```js
+/mobileapi/wishlist/del?product_id=419
+```
+
+**_Response_**
+
+```js
+{
+    code: 0,
+    msg: "delete wish list product 419 success!",
+    model: {
+        wishlist: {
+            wishlist_id: "68",
+            customer_id: "185",
+            shared: "0",
+            sharing_code: "a7c981f078bd0ca88c2662ef7b0407dd",
+            updated_at: "2015-06-23 04:31:12",
+            name: null,
+            visibility: "0"
+        },
+        items: [
+            {
+                name: "Slim fit Dobby Oxford Shirt",
+                image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/m/s/msj003t_2.jpg",
+                url_key: "http://120.24.64.28/slim-fit-dobby-oxford-shirt-575.html",
+                entity_id: "403",
+                regular_price_with_tax: "175.00",
+                final_price_with_tax: "140.00",
+                sku: "msj003c",
+                symbol: "$",
+                short_description: "A bold hue and understated dobby detail bring refined nuance to this modern dress shirt. "
+            }
+        ]
+    }
+}
+```
+
+

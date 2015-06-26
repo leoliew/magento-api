@@ -119,7 +119,7 @@
 
 **_Paramers_**
 
-* `product` - 商品id
+* `product_id` - 商品id
 * `qty` - 商品数量
 * `super_attribute` - 商品选项属性
     
@@ -127,7 +127,7 @@
 **_Examples_**
 
 ```js
-/mobileapi/cart/add?product=421&qty=5&super_attribute[92]=22&super_attribute[180]=80
+/mobileapi/cart/add?product_id=421&qty=5&super_attribute[92]=22&super_attribute[180]=80
 ```
 
 **_Response_**
