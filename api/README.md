@@ -117,3 +117,7 @@
 ### 其他
 * [`获取页面提交FormKey`](https://github.com/leoliew/magento-api/tree/master/api/other.md#getFormKey)
 
+
+### 货币
+* [`设置默认货币`](https://github.com/leoliew/magento-api/tree/master/api/currency.md#setCurrency)
+
