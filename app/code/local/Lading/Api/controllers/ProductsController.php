@@ -73,10 +73,12 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
             case Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE: {
                 $product_detail['attribute_options'] = $products_model->getProductOptions($product);
                 $price = Mage::getModel('mobile/currency')->getCurrencyPrice(($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()));
+                $price = number_format($price, 2, '.', '' );
             }break;
             case Mage_Catalog_Model_Product_Type::TYPE_SIMPLE: {
                 $product_detail['custom_options'] = $products_model->getProductCustomOptionsOption($product);
                 $price = $price = Mage::getModel('mobile/currency')->getCurrencyPrice(($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()));
+                $price = number_format($price, 2, '.', '' );
             }break;
             case Mage_Catalog_Model_Product_Type::TYPE_BUNDLE: {
                 $price = $products_model->collectBundleProductPrices($product);
@@ -87,9 +89,11 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
             }break;
             case Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL:  {
                 $price = $price = Mage::getModel('mobile/currency')->getCurrencyPrice(($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()));
+                $price = number_format($price, 2, '.', '' );
             }break;
             default: {
                 $price = $price = Mage::getModel('mobile/currency')->getCurrencyPrice(($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()));
+                $price = number_format($price, 2, '.', '' );
             } break;
         }
         $product_detail['price'] = $price;

@@ -43,16 +43,20 @@ class Lading_Api_OrderController extends Mage_Core_Controller_Front_Action {
 			}
 			$order_list = array();
 			foreach ($orders as $order) {
+				$currency = $order->getOrderCurrency();
+				if (is_object($currency)) {
+					$currency_code = $currency->getCurrencyCode();
+				}
 				$order_list[] = array(
 					'entity_id' => $order-> getEntityId(),
 					'order_id' => $order->getRealOrderId(),
 					'created_at' => Mage::getModel('core/date')->date('Y-m-d', strtotime($order->getCreatedAt())),
 					'tax_amount' => $order->getTaxAmount(),
-					'shipping_amount' => $order->getShippingAmount(),
-					'discount_amount' => $order->getDiscountAmount(),
-					'subtotal' => $order->getSubtotal(),
-					'grand_total' => $order->getGrandTotal(),
-					'symbol' => Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol (),
+					'shipping_amount' => number_format($order->getShippingAmount(), 2, '.', '' ),
+					'discount_amount' => number_format($order->getDiscountAmount(), 2, '.', '' ),
+					'subtotal' => number_format($order->getSubtotal(), 2, '.', '' ),
+					'grand_total' => number_format($order->getGrandTotal(), 2, '.', '' ),
+					'symbol' => Mage::app()->getLocale()->currency($currency_code)->getSymbol(),
 					'total_qty_ordered' => $order->getTotalQtyOrdered(),
 					'shipping_address_name' => ($order->getShippingAddress()?$order->getShippingAddress()->getName():null),
 					'status' => $order->getStatusLabel()

@@ -33,8 +33,10 @@
  */
 class Lading_Api_CurrencyController extends Mage_Core_Controller_Front_Action
 {
-    public function switchAction()
-    {
+    /**
+     * switch currency
+     */
+    public function switchAction(){
         if ($curency = (string) $this->getRequest()->getParam('currency')) {
             Mage::app()->getStore()->setCurrentCurrencyCode($curency);
         }
@@ -42,6 +44,25 @@ class Lading_Api_CurrencyController extends Mage_Core_Controller_Front_Action
             'code'=>0,
             'msg' => 'set current currency code success!',
             'model'=>null
+        ));
+    }
+
+    /**
+     * get current currency code
+     */
+    public function getAction(){
+        $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+        $currency_symbol = Mage::app()->getLocale()->currency( $currency_code )->getSymbol();
+        $currency_name = Mage::app()->getLocale()->currency( $currency_code )->getName();
+        $result = array(
+            'currency_code' => $currency_code,
+            'currency_symbol' => $currency_symbol,
+            'currency_name' => $currency_name
+        );
+        echo json_encode(array(
+            'code'=>0,
+            'msg' => 'set current currency code success!',
+            'model'=>$result
         ));
     }
 }
