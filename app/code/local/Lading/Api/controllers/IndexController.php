@@ -48,6 +48,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				break;
 
 			case 'catalog' :
+//				Mage::app()->getStore()->setCurrentCurrencyCode('CNY');
 				$category_id = $this->getRequest ()->getParam ( 'category_id' );
 				$page = ($this->getRequest ()->getParam ( 'page' )) ? ($this->getRequest ()->getParam ( 'page' )) : 1;
 				$limit = ($this->getRequest ()->getParam ( 'limit' )) ? ($this->getRequest ()->getParam ( 'limit' )) : 5;
@@ -236,18 +237,23 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 	 * @param $products
 	 * @param string $mod
 	 * @return array
+	 *
+	 *
 	 */
 	public function getProductList($products, $mod = 'product') {
 		$baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
 		$currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
 		$store_id = Mage::app()->getStore()->getId();
+		$product_list = array();
 		foreach ( $products as $product ) {
 			if ($mod == 'catalog') {
 				$product = Mage::getModel ( 'catalog/product' )->load ( $product ['entity_id'] );
 			}
-
 			$summaryData = Mage::getModel('review/review_summary')->setStoreId($store_id)  ->load($product->getId());
-			$product_list [] = array (
+			$price = ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice());
+			$regular_price_with_tax = number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' );
+			$final_price_with_tax = number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' );
+			$temp_product = array(
 				'entity_id' => $product->getId (),
 				'sku' => $product->getSku (),
 				'name' => $product->getName (),
@@ -259,11 +265,12 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				'special_to_date' => $product->getSpecialToDate (),
 				'image_url' => $product->getImageUrl (),
 				'url_key' => $product->getProductUrl (),
-				'price' => ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()),
-				'regular_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-				'final_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+				'price' => Mage::getModel('mobile/currency')->getCurrencyPrice($price),
+				'regular_price_with_tax' =>  Mage::getModel('mobile/currency')->getCurrencyPrice($regular_price_with_tax),
+				'final_price_with_tax' =>  Mage::getModel('mobile/currency')->getCurrencyPrice($final_price_with_tax),
 				'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol()
 			);
+			array_push($product_list,$temp_product);
 		}
 		return $product_list;
 	}
