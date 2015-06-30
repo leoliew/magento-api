@@ -87,7 +87,7 @@ class Lading_Api_Model_Products extends Lading_Api_Model_Abstract {
             $child_product = Mage::getModel('catalog/product')->load($option->getProductId());
             $stock_level = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($child_product)->getQty();
             if($stock_level>0){
-                array_push($bundled_prices,$option->getPrice());
+                array_push($bundled_prices,$price = Mage::getModel('mobile/currency')->getCurrencyPrice($option->getPrice()));
             }
 
         }

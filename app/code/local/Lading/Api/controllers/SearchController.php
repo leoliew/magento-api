@@ -56,12 +56,16 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 			// $this->renderLayout ();
 			$baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
 		    $currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
+			$store_id = Mage::app()->getStore()->getId();
 			foreach($collection as $product){
 			    $product = Mage::getModel ( 'catalog/product' )->load (  $product->getId () );
+				$summaryData = Mage::getModel('review/review_summary')->setStoreId($store_id)  ->load($product->getId());
 			    $productlist [] = array (
         			'entity_id' => $product->getId (),
         			'sku' => $product->getSku (),
         			'name' => $product->getName (),
+					'rating_summary' => $summaryData->getRatingSummary(),
+					'reviews_count' => $summaryData->getReviewsCount(),
         			'news_from_date' => $product->getNewsFromDate (),
         			'news_to_date' => $product->getNewsToDate (),
         			'special_from_date' => $product->getSpecialFromDate (),

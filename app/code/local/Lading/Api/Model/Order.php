@@ -41,6 +41,10 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
             'card_storage' => $order->getPayment()->getCardsStorage(),
             'cards' => $order->getPayment()->getData()['method_instance']
         );
+        $currency = $order->getOrderCurrency();
+        if (is_object($currency)) {
+            $currency_code = $currency->getCurrencyCode();
+        }
         $order_info = array (
             'order_id' => $order->getRealOrderId(),
             'created_at' => $order->getCreatedAt(),
@@ -57,7 +61,7 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
             ),
             'pay_method' => $payment,
             'order_currency' => $order->getOrderCurrency()->getData(),
-            'symbol' => Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(),
+            'symbol' => Mage::app()->getLocale()->currency($currency_code)->getSymbol(),
             'subtotal' => $order->getData()['subtotal'],
             'shipping_amount' => $order->getData()['shipping_amount'],
             'total_due' => $order->getTotalDue(),
