@@ -265,9 +265,9 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				'special_to_date' => $product->getSpecialToDate (),
 				'image_url' => $product->getImageUrl (),
 				'url_key' => $product->getProductUrl (),
-				'price' => Mage::getModel('mobile/currency')->getCurrencyPrice($price),
-				'regular_price_with_tax' =>  Mage::getModel('mobile/currency')->getCurrencyPrice($regular_price_with_tax),
-				'final_price_with_tax' =>  Mage::getModel('mobile/currency')->getCurrencyPrice($final_price_with_tax),
+				'price' => number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($price),2,'.',''),
+				'regular_price_with_tax' =>  number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($regular_price_with_tax),2,'.',''),
+				'final_price_with_tax' =>  number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($final_price_with_tax),2,'.',''),
 				'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol()
 			);
 			array_push($product_list,$temp_product);

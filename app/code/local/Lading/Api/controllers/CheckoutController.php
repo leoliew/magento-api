@@ -108,7 +108,8 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
         $return_result = array (
             'code' => 0,
             'msg' => 'set billing address success!',
-            'model' => null
+            'model' => null,
+            'error' => null
         );
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost('billing', array());
@@ -130,7 +131,8 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
             }
             if ($result['error']){
                 $return_result['code'] = 1;
-                $return_result['msg'] = $result['message'];
+                $return_result['msg'] = 'set billing address fail!';
+                $return_result['error'] = $result['message'];
             }
             $return_result['model'] = $result;
         }

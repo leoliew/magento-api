@@ -87,10 +87,10 @@ class Lading_Api_Model_Products extends Lading_Api_Model_Abstract {
             $child_product = Mage::getModel('catalog/product')->load($option->getProductId());
             $stock_level = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($child_product)->getQty();
             if($stock_level>0){
-                array_push($bundled_prices,$price = Mage::getModel('mobile/currency')->getCurrencyPrice($option->getPrice()));
+                array_push($bundled_prices,Mage::getModel('mobile/currency')->getCurrencyPrice($option->getPrice()));
             }
-
         }
+
         return $this->getSortPrice($bundled_prices);
     }
 
@@ -219,7 +219,6 @@ class Lading_Api_Model_Products extends Lading_Api_Model_Abstract {
                 $attributeOptions[$productAttribute['label']][$attribute['value_index']] = $attribute['store_label'];
             }
         }
-
         return $attributeOptions;
     }
 
@@ -234,8 +233,8 @@ class Lading_Api_Model_Products extends Lading_Api_Model_Abstract {
         $minimum_price=$sort_price[0];
         $maximum_price_tmp=array_slice($sort_price, -1, 1, false);
         $maximum_price=$maximum_price_tmp[0];
-        $price['min'] = $minimum_price;
-        $price['max'] = $maximum_price;
+        $price['min'] = number_format($minimum_price, 2, '.', '' );
+        $price['max'] = number_format($maximum_price, 2, '.', '' );
         return $price;
     }
 
