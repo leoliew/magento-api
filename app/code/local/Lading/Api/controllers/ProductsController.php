@@ -101,6 +101,7 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
         foreach($product->getMediaGalleryImages()->getItems() as $image){
             $mediaGallery[] = $image['url'];
         }
+        $product_detail['in_wishlist'] = false;
         if (Mage::getSingleton('customer/session')->isLoggedIn()) {
             $customer_id =  Mage::getSingleton ( 'customer/session' )->getCustomer ()->getId();
             $item_collection = Mage::getModel('wishlist/item')->getCollection()->addCustomerIdFilter($customer_id);
