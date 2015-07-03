@@ -132,7 +132,8 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
                 $result_rates['code'] = $rate->getCode();
                 $result_rates['method'] = $rate->getMethod();
                 $result_rates['method_title'] = $rate->getMethodTitle();
-                $result_rates['price'] = $rate->getPrice();
+                $result_rates['price'] = number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($rate->getPrice()),2,'.','');
+                $result_rates['symbol'] = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
                 $result_rates['method_description'] = $rate->getMethodDescription();
             }
         }
@@ -158,7 +159,8 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
             $temp_rates['code'] = $rate->getCode();
             $temp_rates['method'] = $rate->getMethod();
             $temp_rates['method_title'] = $rate->getMethodTitle();
-            $temp_rates['price'] = $rate->getPrice();
+            $temp_rates['price'] =  number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($rate->getPrice()),2,'.','');
+            $temp_rates['symbol'] = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
             $temp_rates['method_description'] = $rate->getMethodDescription();
             if($rate->getCode() == $shippingMethod){
                 $temp_rates['is_selected'] = true;

@@ -120,4 +120,5 @@
 
 ### 货币
 * [`设置默认货币`](https://github.com/leoliew/magento-api/tree/master/api/currency.md#setCurrency)
+* [`获取当前设置的货币`](https://github.com/leoliew/magento-api/tree/master/api/currency.md#getCurrency)
 

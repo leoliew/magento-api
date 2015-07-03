@@ -251,10 +251,8 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
             if($item->getProductType()=='configurable'){
                 $cartItemArr['custom_option'] =  Mage::getModel('mobile/cart')->getCustomOptions($item);
             }
-            $icon = $item->getProduct()->getThumbnailUrl();
             $virtual_flag = $item->getProduct()->isVirtual();
-            $cartItemArr['thumbnail_pic_url'] = $icon;
-            $file = Mage::helper('mobileapi')->urlToPath($icon);
+            $cartItemArr['thumbnail_pic_url'] = ( string ) Mage::helper('catalog/image')->init($item->getProduct(), 'thumbnail')->resize ( 250 );;
             $exclPrice = $inclPrice = 0.00;
             if (Mage::helper('tax')->displayCartPriceExclTax() || Mage::helper('tax')->displayCartBothPrices()) {
                 if (Mage::helper('weee')->typeOfDisplay($item, array(0, 1, 4), 'sales') && $item->getWeeeTaxAppliedAmount()) {
@@ -318,6 +316,7 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
         $orderReviewArr['base_discount_amount'] = $quote->getShippingAddress()->getBaseDiscountAmount();
         $orderReviewArr['grand_total'] = $quote->getShippingAddress()->getGrandTotal();
         $orderReviewArr['shipping_method'] = Mage::getModel('mobile/checkout')->getShippingMethodByQuote($quote);
+        $orderReviewArr['symbol'] = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
         $orderReviewArr['is_virtual'] = $virtual_flag;
         echo json_encode(array(
             'code'=> 0,

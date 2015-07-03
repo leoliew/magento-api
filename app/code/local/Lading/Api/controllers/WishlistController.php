@@ -125,6 +125,7 @@ class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
 		foreach ( $wishlist->getItemCollection () as $item ) {
 			$item = Mage::getModel ( 'catalog/product' )->setStoreId ( $item->getStoreId () )->load ( $item->getProductId () );
 			if ($item->getId ()) {
+				$price = Mage::getModel('mobile/currency')->getCurrencyPrice(($item->getSpecialPrice()) == null ? ($item->getPrice()) : ($item->getSpecialPrice()));
 				$items [] = array (
 					'name' => $item->getName (),
 					'image_url' => $item->getImageUrl (),
@@ -132,6 +133,7 @@ class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
 					'entity_id' => $item->getId (),
 					'regular_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $item->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
 					'final_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $item->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
+					'price' => number_format($price, 2, '.', '' ),
 					'sku' => $item->getSku(),
 					'symbol' => Mage::app()->getLocale()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol (),
 					'short_description' => $item->getShortDescription()
