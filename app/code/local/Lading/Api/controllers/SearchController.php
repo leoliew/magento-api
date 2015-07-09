@@ -17,15 +17,15 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
      * search
      */
 	public function indexAction() {
-		$query = Mage::helper ( 'catalogsearch' )->getQuery ();
+		$query = Mage::helper ( 'catalogsearch' )->getQuery();
 		/* @var $query Mage_CatalogSearch_Model_Query */
 		$query->setStoreId ( Mage::app ()->getStore ()->getId () );
 		// $query->getQueryText()打印搜索关键词
 		// var_dump($query->getQueryText());
 		if ($query->getQueryText () != '') {
-			if (Mage::helper ( 'catalogsearch' )->isMinQueryLength ()) {
-				$query->setId ( 0 )->setIsActive ( 1 )->setIsProcessed ( 1 );
-			} else {
+			if (Mage::helper ( 'catalogsearch' )->isMinQueryLength ()){
+				$query->setId( 0 )->setIsActive( 1 )->setIsProcessed( 1 );
+			}else{
 				if ($query->getId ()) {
 					$query->setPopularity ( $query->getPopularity () + 1 );
 				} else {
@@ -54,38 +54,56 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 			// $this->_initLayoutMessages ( 'catalog/session' );
 			// $this->_initLayoutMessages ( 'checkout/session' );
 			// $this->renderLayout ();
-			$baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
-		    $currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
+			$baseCurrency = Mage::app()->getStore()->getBaseCurrency()->getCode();
+		    $currentCurrency = Mage::app()->getStore()->getCurrentCurrencyCode();
 			$store_id = Mage::app()->getStore()->getId();
 			foreach($collection as $product){
-			    $product = Mage::getModel ( 'catalog/product' )->load (  $product->getId () );
-				$summaryData = Mage::getModel('review/review_summary')->setStoreId($store_id)  ->load($product->getId());
-			    $productlist [] = array (
-        			'entity_id' => $product->getId (),
-        			'sku' => $product->getSku (),
-        			'name' => $product->getName (),
+			    $product = Mage::getModel('catalog/product')->load($product->getId());
+				$summaryData = Mage::getModel('review/review_summary')->setStoreId($store_id) ->load($product->getId());
+				$price =($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice());
+				$regular_price_with_tax = $product->getPrice();
+				$final_price_with_tax = $product->getSpecialPrice();
+			    $product_list [] = array(
+        			'entity_id' => $product->getId(),
+        			'sku' => $product->getSku(),
+        			'name' => $product->getName(),
 					'rating_summary' => $summaryData->getRatingSummary(),
 					'reviews_count' => $summaryData->getReviewsCount(),
         			'news_from_date' => $product->getNewsFromDate (),
-        			'news_to_date' => $product->getNewsToDate (),
-        			'special_from_date' => $product->getSpecialFromDate (),
-        			'special_to_date' => $product->getSpecialToDate (),
-        			'image_url' => $product->getImageUrl (),
-        			'url_key' => $product->getProductUrl (),
-					'price' => ($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()),
-        			'regular_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-        			'final_price_with_tax' => number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' ),
-        			'symbol' => Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol ()
+        			'news_to_date' => $product->getNewsToDate(),
+        			'special_from_date' => $product->getSpecialFromDate(),
+        			'special_to_date' => $product->getSpecialToDate(),
+        			'image_url' => $product->getImageUrl(),
+        			'url_key' => $product->getProductUrl(),
+					'price' =>  number_format(Mage::helper('directory')->currencyConvert($price, $baseCurrency, $currentCurrency), 2, '.', '' ),
+        			'regular_price_with_tax' => number_format(Mage::helper('directory')->currencyConvert($regular_price_with_tax, $baseCurrency, $currentCurrency), 2, '.', '' ),
+        			'final_price_with_tax' => number_format(Mage::helper('directory')->currencyConvert($final_price_with_tax, $baseCurrency, $currentCurrency), 2, '.', '' ),
+        			'symbol' => Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol()
     			);
     			$i ++;
 			}
-			// echo json_encode($productlist);
-			echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
-			if (! Mage::helper ( 'catalogsearch' )->isMinQueryLength ()) {
-				$query->save ();
+			echo json_encode(
+				array(
+					'code'=>0,
+					'msg'=>'search '.count($collection).' product success!',
+					'model'=> array(
+						'items'=> $product_list,
+						'count' => count($collection)
+					)
+				)
+			);
+			if(!Mage::helper('catalogsearch')->isMinQueryLength()){
+				$query->save();
 			}
 		} else {
-			// $this->_redirectReferer ();
+			echo json_encode(
+				array(
+					'code'=>0,
+					'msg'=>null,
+					'model'=>null,
+					'error'=>'search keyword can not null!'
+				)
+			);
 		}
 	}
 }

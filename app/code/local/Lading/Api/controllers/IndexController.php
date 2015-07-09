@@ -56,16 +56,16 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				$dir = ($this->getRequest ()->getParam ( 'dir' )) ? ($this->getRequest ()->getParam ( 'dir' )) : 'desc';
 				// ----------------------------------取某个分类下的产品-BEGIN------------------------------//
 				$category = Mage::getModel ( 'catalog/category' )->load ( $category_id );
-				$collection = $category->getProductCollection ()->addAttributeToFilter ( 'status', 1 )->addAttributeToFilter ( 'visibility',array(
-					'neq' => 1)
-				)->addAttributeToSort ( $order, $dir )/* ->setPage ( $page, $limit ) */;
+				$collection = $category->getProductCollection ()->addAttributeToFilter ( 'status', 1 )->addAttributeToFilter ( 'visibility',array('neq' => 1))->addAttributeToSort ( $order, $dir );/* ->setPage ( $page, $limit ) */;
 				$pages = $collection->setPageSize ( $limit )->getLastPageNumber ();
-				// $count=$collection->getSize();
+//				 $count=$collection->getSize();
 				if ($page <= $pages) {
 					$collection->setPage ( $page, $limit );
 					$product_list = $this->getProductList ( $collection, 'catalog' );
+				}else{
+					$product_list = array();
 				}
-				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$product_list) );
+				echo json_encode ( array('code'=>0, 'msg'=>'get '.count($product_list).' product success!', 'model'=>$product_list) );
 				// ------------------------------取某个分类下的产品-END-----------------------------------//
 				break;
 			case 'coming_soon' : // 数据ok
@@ -161,9 +161,11 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				if ($page <= $pages) {
 					$_products->setPage ( $page, $limit );
 					$products = $_products->getItems ();
-					$productlist = $this->getProductList ( $products );
+					$product_list = $this->getProductList ( $products );
+				}else{
+					$product_list = array();
 				}
-				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
+				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$product_list) );
 				// ------------------------------首页 预特价商品 END--------------------------------//
 				break;
 			case 'daily_sale' : // 数据OK
