@@ -214,73 +214,30 @@
 
 ```js
 {
-    code: 0, //0是成功，非0都是失败
-    msg: null, //返回信息，null代表没有
-    model: [
-        {
-            entity_id: "284", //商品id
-            sku: "wbk002L", //商品编号
-            name: "Black NoLIta Cami", //商品名称
-            rating_summary: "100", //总体评分（100分为满分）
-            reviews_count: "3", //多少人评论
-            news_from_date: "2013-05-08 00:00:00", //新品开始时间
-            news_to_date: null, //新品结束时间
-            special_from_date: "2013-03-05 00:00:00", //特价开始时间
-            special_to_date: null, //特价结束时间
-            image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/w/b/wbk002t.jpg", //图片链接
-            url_key: "http://120.24.64.28/nolita-cami-590.html", //商品url
-            regular_price_with_tax: "150.00", //原价
-            final_price_with_tax: "120.00", //当前商品价格，在特价周期内的价格，不在周期内为原价，0则表示没有特价
-            symbol: "$" //货币符号
-        }
-    ］
-}
-```
-
----------------------------------------
-
-<a name="indexSearch" />
-### 搜索结果数量
-
-**`GET` `/mobileapi/search/index`**
-
-搜索产品接口，不需要带`cookies`.
-
-**_Paramers_**
-
-* `q` - 搜索条件，按商品名称搜索
-
-
-**_Examples_**
-
-```js
-/mobileapi/search/index?q=Oxford
-```
-
-**_Response_**
-
-```js
-{
-    code: 0, //0是成功，非0都是失败
-    msg: null, //错误信息，null代表没有
-    model: [
-        {
-            entity_id: "284", //商品id
-            sku: "wbk002L", //商品编号
-            name: "Black NoLIta Cami", //商品名称
-            name: "Black NoLIta Cami", //商品名称
-            rating_summary: "100", //总体评分（100分为满分）
-            news_from_date: "2013-05-08 00:00:00", //新品开始时间
-            news_to_date: null, //新品结束时间
-            special_from_date: "2013-03-05 00:00:00", //特价开始时间
-            special_to_date: null, //特价结束时间
-            image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/w/b/wbk002t.jpg", //图片链接
-            url_key: "http://120.24.64.28/nolita-cami-590.html", //商品url
-            regular_price_with_tax: "150.00", //原价
-            final_price_with_tax: "120.00", //当前商品价格，在特价周期内的价格，不在周期内为原价，0则表示没有特价
-            symbol: "$" //货币符号
-        }
-    ］
+    code: 0,
+    msg: "search 1 product success!",
+    model: {
+        items: [
+            {
+                entity_id: "399",
+                sku: "hde012",
+                name: "Madison 8GB Digital Media Player",
+                rating_summary: null,
+                reviews_count: null,
+                news_from_date: null,
+                news_to_date: null,
+                special_from_date: null,
+                special_to_date: null,
+                image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/h/d/hde012_3.jpg",
+                url_key: "http://120.24.64.28/madison-8gb-digital-media-player.html",
+                price: "979.50",
+                regular_price_with_tax: "979.50",
+                final_price_with_tax: "0.00",
+                symbol: "CN¥"
+            }
+        ],
+        count: 1
+    }
 }
 ```
 
