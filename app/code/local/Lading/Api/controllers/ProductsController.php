@@ -138,30 +138,4 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
 
 
 
-    public function testAction() {
-        $product_id = $this->getRequest ()->getParam ( 'product_id' );
-        $product = Mage::getModel ( "catalog/product" )->load ( $product_id );
-//		echo $product->getResource();
-//        echo $product->getInfo();
-//        echo $product->getAdditionalData();
-//        echo '1234567890o';
-//		$attributeId = Mage::getResourceModel('eav/entity_attribute')
-//			->getIdByCode('catalog_product', 'color');
-//		$attributeValue = Mage::getModel('catalog/product')->load($product_id)->getMyAttribute();
-//		echo $attributeValue;
-        $_attributes = $product->getTypeInstance(true)->getConfigurableAttributes($product);
-        $_allowProducts = array();
-        $_allProducts = $product->getTypeInstance(true)->getUsedProducts(null, $product);
-        foreach ($_allProducts as $_product) {
-            if ($_product->isSaleable()) {
-                $_allowProducts[] = $_product;
-            }
-        }
-        echo  $product->getName();
-        echo json_encode($_allProducts);
-    }
-
-
-
-
 } 
