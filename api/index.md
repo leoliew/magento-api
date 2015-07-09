@@ -207,7 +207,7 @@
 **_Examples_**
 
 ```js
-/mobileapi/search/index?q=Oxford
+/mobileapi/search/index?q=Oxford&page=1&limit=5
 ```
 
 **_Response_**
