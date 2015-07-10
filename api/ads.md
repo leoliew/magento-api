@@ -6,6 +6,7 @@
 **`GET` `/mobileapi/banner/getbanner`**
 
 首页滚动广告.图片资源位置:http://www.(域名).com/media/(image_url)
+type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 
 **_Paramers_**
 
@@ -421,4 +422,69 @@
     }
 }
 ```
+
+---------------------------------------
+
+<a name="findItemsByBanner" />
+### 根据banner id获取商品列表或商品
+
+**`GET` `/mobileapi/banner/getitembybanner`**
+
+你浏览过的商品.图片资源位置:http://www.(域名).com/media/(image_url)
+
+**_Paramers_**
+
+* `banner_id` - banner id
+
+**_Examples_**
+
+```js
+    /mobileapi/banner/getitembybanner?banner_id=2
+```
+
+**_Response_**
+
+```js
+{
+    code: 0,
+    msg: "get products success!",
+    model: [
+        {
+            entity_id: "448",
+            sku: "hbm000",
+            name: "A Tale of Two Cities",
+            rating_summary: null,
+            reviews_count: null,
+            news_from_date: null,
+            news_to_date: null,
+            special_from_date: null,
+            special_to_date: null,
+            image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/t/a/tale_two_cities_1_1.jpg",
+            url_key: "http://120.24.64.28/a-tale-of-two-cities.html",
+            price: "10.00",
+            regular_price_with_tax: "10.00",
+            final_price_with_tax: "0.00",
+            symbol: "$"
+        },
+        {
+            entity_id: "425",
+            sku: "wsd013c",
+            name: "Lafayette Convertible Dress",
+            rating_summary: "100",
+            reviews_count: "3",
+            news_from_date: "2013-03-01 00:00:00",
+            news_to_date: null,
+            special_from_date: "2013-03-01 00:00:00",
+            special_to_date: null,
+            image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/w/s/wsd013t.jpg",
+            url_key: "http://120.24.64.28/lafayette-convertible-dress.html",
+            price: "340.00",
+            regular_price_with_tax: "340.00",
+            final_price_with_tax: "0.00",
+            symbol: "$"
+        }
+    ]
+}
+```
+
 

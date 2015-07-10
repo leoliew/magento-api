@@ -81,6 +81,7 @@
 * [`静态广告`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#staticAds)
 * [`其他用户浏览`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#otherVisits)
 * [`你浏览过的商品`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#yourVisits)
+* [`获取商品列表或商品`](https://github.com/leoliew/magento-api/tree/master/api/ads.md#findItemsByBanner)
 
 
 ### 心愿清单
