@@ -6,6 +6,7 @@
 **`GET` `/mobileapi/banner/getbanner`**
 
 首页滚动广告.图片资源位置:http://www.(域名).com/media/(image_url)
+type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 
 **_Paramers_**
 

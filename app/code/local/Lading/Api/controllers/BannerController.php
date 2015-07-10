@@ -12,16 +12,29 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
                 ->addFieldToFilter('banner_id', $model->getBannerId())
                 ->setOrder('banner_order','ASC');
             foreach ($banner_items as $banner_item) {
+                $type = 0;
+                if($banner_item->getLinkUrl()){
+                    $type = 1;
+                }
+                if($banner_item->getContent() && strlen($banner_item->getContent()>0)){
+                    $type = 2;
+                }
+                if($banner_item->getContent() && strrpos($banner_item->getContent(),',')){
+                    $type = 3;
+                }
+
+
                 $bannerList [] = array(
                     'banner_item_id' => $banner_item->getbannerItemId(),
                     'title' => $banner_item->getTitle(),
                     'image' => $banner_item->getImage(),
-                    'image_url' => $banner_item->getImageUrl(),
-                    'thumb_image' => $banner_item->getThumbImage(),
-                    'thumb_image_url'=> $banner_item->getThumbImageUrl(),
+//                    'image_url' => $banner_item->getImageUrl(),
+//                    'thumb_image' => $banner_item->getThumbImage(),
+//                    'thumb_image_url'=> $banner_item->getThumbImageUrl(),
                     'content' => $banner_item->getContent(),
-                    'price' => $banner_item->getPrice(),
+//                    'price' => $banner_item->getPrice(),
                     'link_url' => $banner_item->getLinkUrl(),
+                    'type' => $type
                 );
             }
             echo json_encode(array(
