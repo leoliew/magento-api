@@ -34,16 +34,18 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
         active_from: null,
         active_to: null,
         create_time: "2015-05-22 03:03:23",
+        symbol: "$",
         banner_items: [
             {
                 banner_item_id: "2",
                 title: "index2",
-                image: "easybanner/52de4be03cd020bfd948fbbda3c504cc.jpg",  
+                image: "easybanner/52de4be03cd020bfd948fbbda3c504cc.jpg",
                 image_url: "http://www.hao123.com/",
                 thumb_image: "",
                 thumb_image_url: "http://www.hao123.com/",
-                content: "http://www.hao123.com/",
-                link_url: "http://www.hao123.com/"
+                content: "421",
+                link_url: "http://www.hao123.com/",
+                price: "210.00"
             },
             {
                 banner_item_id: "3",
@@ -105,6 +107,7 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
         active_from: null,
         active_to: null,
         create_time: "2015-05-22 03:03:23",
+        symbol: "$",
         banner_items: [
             {
                 banner_item_id: "2",
@@ -113,8 +116,9 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
                 image_url: "http://www.hao123.com/",
                 thumb_image: "",
                 thumb_image_url: "http://www.hao123.com/",
-                content: "http://www.hao123.com/",
-                link_url: "http://www.hao123.com/"
+                content: "421",
+                link_url: "http://www.hao123.com/",
+                price: "210.00"
             },
             {
                 banner_item_id: "3",
@@ -174,6 +178,7 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
         active_from: null,
         active_to: null,
         create_time: "2015-05-22 03:03:23",
+        symbol: "$",
         banner_items: [
             {
                 banner_item_id: "2",
@@ -182,8 +187,9 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
                 image_url: "http://www.hao123.com/",
                 thumb_image: "",
                 thumb_image_url: "http://www.hao123.com/",
-                content: "http://www.hao123.com/",
-                link_url: "http://www.hao123.com/"
+                content: "421",
+                link_url: "http://www.hao123.com/",
+                price: "210.00"
             },
             {
                 banner_item_id: "3",
@@ -245,6 +251,7 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
         active_from: null,
         active_to: null,
         create_time: "2015-05-22 03:03:23",
+        symbol: "$",
         banner_items: [
             {
                 banner_item_id: "2",
@@ -253,8 +260,9 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
                 image_url: "http://www.hao123.com/",
                 thumb_image: "",
                 thumb_image_url: "http://www.hao123.com/",
-                content: "http://www.hao123.com/",
-                link_url: "http://www.hao123.com/"
+                content: "421",
+                link_url: "http://www.hao123.com/",
+                price: "210.00"
             },
             {
                 banner_item_id: "3",
@@ -316,6 +324,7 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
         active_from: null,
         active_to: null,
         create_time: "2015-05-22 03:03:23",
+        symbol: "$",
         banner_items: [
             {
                 banner_item_id: "2",
@@ -324,8 +333,9 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
                 image_url: "http://www.hao123.com/",
                 thumb_image: "",
                 thumb_image_url: "http://www.hao123.com/",
-                content: "http://www.hao123.com/",
-                link_url: "http://www.hao123.com/"
+                content: "421",
+                link_url: "http://www.hao123.com/",
+                price: "210.00"
             },
             {
                 banner_item_id: "3",
@@ -387,6 +397,7 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
         active_from: null,
         active_to: null,
         create_time: "2015-05-22 03:03:23",
+        symbol: "$",
         banner_items: [
             {
                 banner_item_id: "2",
@@ -395,8 +406,9 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
                 image_url: "http://www.hao123.com/",
                 thumb_image: "",
                 thumb_image_url: "http://www.hao123.com/",
-                content: "http://www.hao123.com/",
-                link_url: "http://www.hao123.com/"
+                content: "421",
+                link_url: "http://www.hao123.com/",
+                price: "210.00"
             },
             {
                 banner_item_id: "3",

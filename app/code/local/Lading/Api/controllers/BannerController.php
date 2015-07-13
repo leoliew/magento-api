@@ -22,6 +22,11 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
                 if($banner_item->getContent() && strrpos($banner_item->getContent(),',')){
                     $type = 3;
                 }
+                if($type == 2){
+                    $product = Mage::getModel ( "catalog/product" )->load ($banner_item->getContent());
+                    $price = $price = Mage::getModel('mobile/currency')->getCurrencyPrice(($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()));
+                    $price = number_format($price, 2, '.', '' );
+                }
                 $bannerList [] = array(
                     'banner_item_id' => $banner_item->getbannerItemId(),
                     'title' => $banner_item->getTitle(),
@@ -30,7 +35,7 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
 //                    'thumb_image' => $banner_item->getThumbImage(),
 //                    'thumb_image_url'=> $banner_item->getThumbImageUrl(),
                     'content' => $banner_item->getContent(),
-//                    'price' => $banner_item->getPrice(),
+                    'price' => $price,
                     'link_url' => $banner_item->getLinkUrl(),
                     'type' => $type
                 );
@@ -48,6 +53,7 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
                     'active_from'=> $model->getActiveFrom(),
                     'active_to' => $model->getActiveTo(),
                     'create_time'=> $model->getCreatedTime(),
+                    'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(),
                     'banner_items'=> $bannerList
                 )
             ));
