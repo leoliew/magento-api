@@ -45,13 +45,8 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 			$collection->setCurPage($page)->setPageSize($limit)->addAttributeToFilter('visibility', array('in' => array(
 				Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_SEARCH,
 				Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
-			)))->joinField('qty',
-				'cataloginventory/stock_item',
-				'qty',
-				'product_id=entity_id',
-				'{{table}}.stock_id=1',
-				'left')
-				->addAttributeToFilter('qty', array("gt" => 0)) ->addAttributeToSort ( $order, $dir );
+			)))->addAttributeToSort($order, $dir);
+			Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($collection);
 			$pages = $collection->setPageSize($limit)->getLastPageNumber();
 			if($page <= $pages){
 				$i = 1;
@@ -142,6 +137,7 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 				Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_SEARCH,
 				Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
 			)));
+			Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($collection);
 			echo json_encode(
 				array(
 					'code'=>0,

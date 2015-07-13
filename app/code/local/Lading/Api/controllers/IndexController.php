@@ -56,13 +56,8 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				$dir = ($this->getRequest ()->getParam ( 'dir' )) ? ($this->getRequest ()->getParam ( 'dir' )) : 'desc';
 				// ----------------------------------取某个分类下的产品-BEGIN------------------------------//
 				$category = Mage::getModel ( 'catalog/category' )->load ( $category_id );
-				$collection = $category->getProductCollection ()->addAttributeToFilter ( 'status', 1 )->addAttributeToFilter ( 'visibility',array('neq' => 1))->joinField('qty',
-					'cataloginventory/stock_item',
-					'qty',
-					'product_id=entity_id',
-					'{{table}}.stock_id=1',
-					'left')
-					->addAttributeToFilter('qty', array("gt" => 0))->addAttributeToSort ( $order, $dir );
+				$collection = $category->getProductCollection ()->addAttributeToFilter ( 'status', 1 )->addAttributeToFilter ( 'visibility',array('neq' => 1))->addAttributeToSort ( $order, $dir );
+				Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($collection);
 				$pages = $collection->setPageSize ( $limit )->getLastPageNumber ();
 				if ($page <= $pages) {
 					$collection->setPage ( $page, $limit );
@@ -205,7 +200,7 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 					$products = $collection->getItems ();
 					$productlist = $this->getProductList ( $products );
 				}
-				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist));
+				echo json_encode ( array('code'=>0, 'msg'=>null, 'model'=>$productlist) );
 				// echo $count;
 
 				// -------------------------------首页 特卖商品 END------------------------------//
