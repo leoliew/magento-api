@@ -11,6 +11,7 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
                 ->addFieldToFilter('status', true)
                 ->addFieldToFilter('banner_id', $model->getBannerId())
                 ->setOrder('banner_order','ASC');
+            $bannerList = array();
             foreach ($banner_items as $banner_item) {
                 $type = 0;
                 if($banner_item->getLinkUrl()){
@@ -22,12 +23,7 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
                 if($banner_item->getContent() && strrpos($banner_item->getContent(),',')){
                     $type = 3;
                 }
-                if($type == 2){
-                    $product = Mage::getModel ( "catalog/product" )->load ($banner_item->getContent());
-                    $price = $price = Mage::getModel('mobile/currency')->getCurrencyPrice(($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()));
-                    $price = number_format($price, 2, '.', '' );
-                }
-                $bannerList [] = array(
+                $temp_banner = array(
                     'banner_item_id' => $banner_item->getbannerItemId(),
                     'title' => $banner_item->getTitle(),
                     'image' => $banner_item->getImage(),
@@ -35,10 +31,15 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
 //                    'thumb_image' => $banner_item->getThumbImage(),
 //                    'thumb_image_url'=> $banner_item->getThumbImageUrl(),
                     'content' => $banner_item->getContent(),
-                    'price' => $price,
                     'link_url' => $banner_item->getLinkUrl(),
                     'type' => $type
                 );
+                if($type == 2){
+                    $product = Mage::getModel ( "catalog/product" )->load ($banner_item->getContent());
+                    $price = $price = Mage::getModel('mobile/currency')->getCurrencyPrice(($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()));
+                    $temp_banner['price'] = number_format($price, 2, '.', '' );
+                }
+                array_push($bannerList,$temp_banner);
             }
             echo json_encode(array(
                 'code'=>0,
