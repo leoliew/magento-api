@@ -56,9 +56,9 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				$dir = ($this->getRequest ()->getParam ( 'dir' )) ? ($this->getRequest ()->getParam ( 'dir' )) : 'desc';
 				// ----------------------------------取某个分类下的产品-BEGIN------------------------------//
 				$category = Mage::getModel ( 'catalog/category' )->load ( $category_id );
-				$collection = $category->getProductCollection ()->addAttributeToFilter ( 'status', 1 )->addAttributeToFilter ( 'visibility',array('neq' => 1))->addAttributeToSort ( $order, $dir );/* ->setPage ( $page, $limit ) */;
+				$collection = $category->getProductCollection ()->addAttributeToFilter ( 'status', 1 )->addAttributeToFilter ( 'visibility',array('neq' => 1))->addAttributeToSort ( $order, $dir );
+				Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($collection);
 				$pages = $collection->setPageSize ( $limit )->getLastPageNumber ();
-//				 $count=$collection->getSize();
 				if ($page <= $pages) {
 					$collection->setPage ( $page, $limit );
 					$product_list = $this->getProductList ( $collection, 'catalog' );
@@ -270,7 +270,8 @@ class Lading_Api_IndexController extends Mage_Core_Controller_Front_Action {
 				'price' => number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($price),2,'.',''),
 				'regular_price_with_tax' =>  number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($regular_price_with_tax),2,'.',''),
 				'final_price_with_tax' =>  number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($final_price_with_tax),2,'.',''),
-				'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol()
+				'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(),
+				'stock_level' => (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty()
 			);
 			array_push($product_list,$temp_product);
 		}

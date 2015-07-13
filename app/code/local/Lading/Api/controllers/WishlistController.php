@@ -136,6 +136,7 @@ class Lading_Api_WishlistController extends Mage_Core_Controller_Front_Action {
 					'price' => number_format($price, 2, '.', '' ),
 					'sku' => $item->getSku(),
 					'symbol' => Mage::app()->getLocale()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol (),
+					'stock_level' => (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($item)->getQty(),
 					'short_description' => $item->getShortDescription()
 				);
 			}

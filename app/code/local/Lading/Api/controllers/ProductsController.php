@@ -77,6 +77,7 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
             }break;
             case Mage_Catalog_Model_Product_Type::TYPE_SIMPLE: {
                 $product_detail['custom_options'] = $products_model->getProductCustomOptionsOption($product);
+                $product_detail['stock_level'] = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty();
                 $price = $price = Mage::getModel('mobile/currency')->getCurrencyPrice(($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice()));
                 $price = number_format($price, 2, '.', '' );
             }break;
@@ -101,6 +102,9 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
         foreach($product->getMediaGalleryImages()->getItems() as $image){
             $mediaGallery[] = $image['url'];
         }
+        if(count($mediaGallery)<=0){
+            array_push($mediaGallery,Mage::getModel('catalog/product_media_config')->getMediaUrl( $product->getImage()));
+        };
         $product_detail['in_wishlist'] = false;
         if (Mage::getSingleton('customer/session')->isLoggedIn()) {
             $customer_id =  Mage::getSingleton ( 'customer/session' )->getCustomer ()->getId();

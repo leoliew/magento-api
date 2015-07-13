@@ -45,7 +45,8 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 			$collection->setCurPage($page)->setPageSize($limit)->addAttributeToFilter('visibility', array('in' => array(
 				Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_SEARCH,
 				Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
-			)))->addAttributeToSort ( $order, $dir );
+			)))->addAttributeToSort($order, $dir);
+			Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($collection);
 			$pages = $collection->setPageSize($limit)->getLastPageNumber();
 			if($page <= $pages){
 				$i = 1;
@@ -73,7 +74,8 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 						'price' =>  number_format(Mage::helper('directory')->currencyConvert($price, $baseCurrency, $currentCurrency), 2, '.', '' ),
 						'regular_price_with_tax' => number_format(Mage::helper('directory')->currencyConvert($regular_price_with_tax, $baseCurrency, $currentCurrency), 2, '.', '' ),
 						'final_price_with_tax' => number_format(Mage::helper('directory')->currencyConvert($final_price_with_tax, $baseCurrency, $currentCurrency), 2, '.', '' ),
-						'symbol' => Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol()
+						'symbol' => Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(),
+						'stock_level' => (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty()
 					);
 					$i ++;
 				}
@@ -135,6 +137,7 @@ class Lading_Api_SearchController extends Mage_Core_Controller_Front_Action {
 				Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_SEARCH,
 				Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
 			)));
+			Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($collection);
 			echo json_encode(
 				array(
 					'code'=>0,
