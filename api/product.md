@@ -124,9 +124,9 @@
     
 **_Form_**
 
-* `ratings[1]` - Price评分
+* `ratings[1]` - Price评分 (需要加上10分)
 * `ratings[2]` - Value评分 (需要加上5分)
-* `ratings[3]` - Quality评分 (需要加上10分)
+* `ratings[3]` - Quality评分 
 * `nickname` - 评论人名称
 * `title` - 标题
 * `detail` - 内容
