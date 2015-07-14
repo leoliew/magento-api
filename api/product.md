@@ -114,30 +114,36 @@
 <a name="addProductReview" />
 ### 添加商品评论
 
-**`POST` `/mobileapi/review/add`**
+**`POST` `/mobileapi/review/post`**
 
 根据商品ID添加评论和评分.
 
 **_Paramers_**
 
-    null
+* `product_id` - 商品id
     
 **_Form_**
 
+* `ratings[1]` - Price评分 (需要加上10分)
+* `ratings[2]` - Value评分 (需要加上5分)
+* `ratings[3]` - Quality评分 
 * `nickname` - 评论人名称
 * `title` - 标题
-* `content` - 内容
-* `item_id` - 商品ID
+* `detail` - 内容
+* `validate_rating` - 验证是否打分，无需传入
 
 
 **_Examples_**
 
 ```js
-/mobileapi/review/add
+/mobileapi/review/post
     Form:  nickname=leoo
            title=haha
-           content=abcdefghi
-           item_id=418
+           detail=abcdefghi
+           validate_rating=
+           ratings[1]=5
+           ratings[2]=10
+           ratings[3]=15
 ```
 
 **_Response_**
