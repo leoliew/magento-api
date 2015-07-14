@@ -11,45 +11,33 @@
  */
 class Lading_Api_ReviewController extends Mage_Core_Controller_Front_Action{
 
-    /**
-     * get product by id
-     * @param $productId
-     * @return bool
-     */
-    protected function _loadProduct($productId) {
-        if (!$productId) {
-            return false;
-        }
-        $product = Mage::getModel('catalog/product')
-            ->setStoreId(Mage::app()->getStore()->getId())
-            ->load($productId);
-        if (!$product->getId() || !$product->isVisibleInCatalog() || !$product->isVisibleInSiteVisibility()) {
-            return false;
-        }
-        return $product;
-    }
 
-
-
+    
     /**
      * Submit new review action
      *
      */
-    public function addAction(){
-        $data = array();
-        $data['ratings'] = array();
-//        $r = (int) $_REQUEST['rating'];
-//        $data['ratings']['1'] = (string) $r;
-//        $data['ratings']['2'] = (string) ($r + 5);
-//        $data['ratings']['3'] = (string) ($r + 10);
-        $customer = Mage::getSingleton('customer/session')->getCustomer();
-        $data['nickname'] = trim($customer->firstname . ' ' . $customer->lastname);
-        $data['nickname'] = empty($data['nickname']) ? 'Mobile' : $data['nickname'];
-        $data['title'] = empty($_REQUEST['title']) ? 'From mobile' : $_REQUEST['title'];
-        $data['detail'] = $_REQUEST['content'];
-        $rating = $data['ratings'];
-        if (($product = $this->_loadProduct($_REQUEST['item_id'])) && !empty($data)) {
-            $review = Mage::getModel('review/review')->setData($data);
+    public function postAction(){
+        $product_id = $this->getRequest ()->getParam ('product_id');
+        $return_result = array(
+            'code'=> 0,
+            'model'=> null,
+        );
+        if ($data = Mage::getSingleton('review/session')->getFormData(true)) {
+            $rating = array();
+            if (isset($data['ratings']) && is_array($data['ratings'])) {
+                $rating = $data['ratings'];
+            }
+        } else {
+            $data   = $this->getRequest()->getPost();
+            $rating = $this->getRequest()->getParam('ratings', array());
+        }
+        $product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())->load($product_id);
+        if (($product) && !empty($data)) {
+            $session    = Mage::getSingleton('core/session');
+            /* @var $session Mage_Core_Model_Session */
+            $review     = Mage::getModel('review/review')->setData($data);
+            /* @var $review Mage_Review_Model_Review */
             $validate = $review->validate();
             if ($validate === true) {
                 try {
@@ -68,23 +56,29 @@ class Lading_Api_ReviewController extends Mage_Core_Controller_Front_Action{
                             ->addOptionVote($optionId, $product->getId());
                     }
                     $review->aggregate();
-                    echo json_encode(array('code'=>0,'msg'=>'Your review has been accepted for moderation.', 'model'=>true));
-                } catch (Exception $e) {
-                    echo json_encode(array('code'=>1,'msg'=>$e->getMessage(), 'model'=>false));
+                    $return_result['msg'] = 'Your review has been accepted for moderation.';
                 }
-            } else {
+                catch (Exception $e) {
+                    $return_result['code'] = 1;
+                    $return_result['error'] = 'Unable to post the review.';
+                }
+            }
+            else {
+                $session->setFormData($data);
                 if (is_array($validate)) {
-                    $errors = array();
                     foreach ($validate as $errorMessage) {
-                        array_push($errors, $errorMessage);
+                        $return_result['error'] = $errorMessage;
                     }
-                    echo json_encode(array('code'=>2,'msg'=>$errors, 'model'=>false));
-                } else {
-                    echo json_encode(array('code'=>3,'msg'=>'Unable to post the review.', 'model'=>false));
+                }
+                else {
+                    $return_result['error'] = 'Unable to post the review.';
                 }
             }
         }
+        echo json_encode($return_result);
     }
+
+
 
 
     /**
