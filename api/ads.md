@@ -449,10 +449,10 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 
 ---------------------------------------
 
-<a name="findItemsByBanner" />
-### 根据banner id获取商品列表或商品
+<a name="findItemsByBannerItem" />
+### 根据banner item id获取商品列表
 
-**`GET` `/mobileapi/banner/getitembybanner`**
+**`GET` `/mobileapi/banner/getItemsByBannerItem`**
 
 你浏览过的商品.图片资源位置:http://www.(域名).com/media/(image_url)
 
@@ -463,7 +463,7 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 **_Examples_**
 
 ```js
-    /mobileapi/banner/getitembybanner?banner_id=2
+    /mobileapi/banner/getItemsByBannerItem?banner_id=2
 ```
 
 **_Response_**
@@ -510,5 +510,71 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
     ]
 }
 ```
+
+---------------------------------------
+
+<a name="findItemListByBanner" />
+### 根据banner id 获取商品列表
+
+**`GET` `/mobileapi/banner/getItemListByBanner`**
+
+你浏览过的商品.图片资源位置:http://www.(域名).com/media/(image_url)
+
+**_Paramers_**
+
+* `identifier` - banner 唯一标记
+
+**_Examples_**
+
+```js
+    /mobileapi/banner/getItemListByBanner?identifier=recommend&limit=2&page=3
+```
+
+**_Response_**
+
+```js
+{
+    code: 0,
+    msg: "get item list success!",
+    model: [
+        {
+            entity_id: "448",
+            sku: "hbm000",
+            name: "A Tale of Two Cities",
+            rating_summary: null,
+            reviews_count: null,
+            news_from_date: null,
+            news_to_date: null,
+            special_from_date: null,
+            special_to_date: null,
+            image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/t/a/tale_two_cities_1_1.jpg",
+            url_key: "http://120.24.64.28/a-tale-of-two-cities.html",
+            price: "10.00",
+            regular_price_with_tax: "10.00",
+            final_price_with_tax: "0.00",
+            symbol: "$"
+        },
+        {
+            entity_id: "425",
+            sku: "wsd013c",
+            name: "Lafayette Convertible Dress",
+            rating_summary: "100",
+            reviews_count: "3",
+            news_from_date: "2013-03-01 00:00:00",
+            news_to_date: null,
+            special_from_date: "2013-03-01 00:00:00",
+            special_to_date: null,
+            image_url: "http://120.24.64.28/media/catalog/product/cache/1/image/265x/9df78eab33525d08d6e5fb8d27136e95/w/s/wsd013t.jpg",
+            url_key: "http://120.24.64.28/lafayette-convertible-dress.html",
+            price: "340.00",
+            regular_price_with_tax: "340.00",
+            final_price_with_tax: "0.00",
+            symbol: "$"
+        }
+    ]
+}
+```
+
+
 
 
