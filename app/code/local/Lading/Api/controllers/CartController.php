@@ -80,62 +80,56 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 		echo json_encode($return_result);
     }
 
-    /**
-     * @method updateAction
-     */
-	public function updateAction() {
-		$itemId = ( int ) $this->getRequest ()->getParam ( 'cart_item_id', 0 );
-		$qty = ( int ) $this->getRequest ()->getParam ( 'qty', 0 );
-		$oldQty = 0;
-		$item = null;
+
+
+	/**
+	 * Update customer's shopping cart
+	 */
+	public function updateAction(){
+		$return_result = array(
+			'code' => 0,
+			'msg'  => 'update carts success',
+			'model' => null,
+			'error' => null
+		);
 		try {
-			if ($itemId && $qty > 0) {
-				$cartData = array ();
-				$cartData [$itemId] ['qty'] = $qty;
-				$cart = Mage::getSingleton ( 'checkout/cart' );
-				/* * ****** if update fail rollback ********* */
-				if ($cart->getQuote ()->getItemById ( $itemId )) {
-					$item = $cart->getQuote ()->getItemById ( $itemId );
-				} else {
-					echo json_encode ( array (
-							'code' => 1,
-							'msg' => 'a wrong cart_item_id was given.',
-							'model' => null 
-					) );
-					return false;
+			$cartData = $this->getRequest()->getParam('cart');
+			if (is_array($cartData)) {
+				$filter = new Zend_Filter_LocalizedToNormalized(
+					array('locale' => Mage::app()->getLocale()->getLocaleCode())
+				);
+				foreach ($cartData as $index => $data) {
+					if (isset($data['qty'])) {
+						$cartData[$index]['qty'] = $filter->filter(trim($data['qty']));
+					}
 				}
-				$oldQty = $item->getQty ();
-				if (! $cart->getCustomerSession ()->getCustomer ()->getId () && $cart->getQuote ()->getCustomerId ()) {
-					$cart->getQuote ()->setCustomerId ( null );
+				$cart = Mage::getSingleton('checkout/cart');
+				if (! $cart->getCustomerSession()->getCustomer()->getId() && $cart->getQuote()->getCustomerId()) {
+					$cart->getQuote()->setCustomerId(null);
 				}
-				$cart->updateItems ( $cartData )->save ();
-				if ($cart->getQuote ()->getHasError ()) { // apply for 1.7.0.2
-					$mesg = current ( $cart->getQuote ()->getErrors () );
-					Mage::throwException ( $mesg->getText () );
-					return false;
-				}
+				$cartData = $cart->suggestItemsQty($cartData);
+				$cart->updateItems($cartData)
+					->save();
 			}
-			$session = Mage::getSingleton ( 'checkout/session' );
-			$session->setCartWasUpdated ( true );
-		} catch ( Mage_Core_Exception $e ) { // rollback $quote->collectTotals()->save();
-			$item && $item->setData ( 'qty', $oldQty );
-			$cart->getQuote ()->setTotalsCollectedFlag ( false ); // reflash price
-			echo json_encode (array(
-				'code' => 1,
-				'msg' => $e->getMessage (),
-				'model' => null
-			));
+			Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
+
+		} catch (Mage_Core_Exception $e) {
+			$return_result['code'] = 1;
+			$return_result['error'] = $e->getMessage();
+			echo json_encode($return_result);
 			return false;
-		} catch ( Exception $e ) {
-			echo json_encode (array(
-				'code' => 1,
-				'msg' => $e->getMessage (),
-				'model' => null
-			) );
+		} catch (Exception $e) {
+			$return_result['code'] = 1;
+			$return_result['error'] = 'Cannot update shopping cart.';
+			Mage::logException($e);
+			echo json_encode($return_result);
 			return false;
 		}
 		return $this->getCartInfoAction ();
 	}
+
+
+
 
 
 	/**

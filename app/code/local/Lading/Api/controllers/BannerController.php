@@ -5,12 +5,21 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
      */
     public function getBannerAction() {
         $identifier  = Mage::app ()->getRequest ()->getParam('identifier');
+        $page = ($this->getRequest ()->getParam ( 'page' )) ? ($this->getRequest ()->getParam ( 'page' )) : 1;
+        $limit = ($this->getRequest ()->getParam ( 'limit' )) ? ($this->getRequest ()->getParam ( 'limit' )) : 2;
         $model  = Mage::getModel('easybanner/banner')->load($identifier,'identifier');
         if ($model->getId()) {
             $banner_items = Mage::getModel('easybanner/banneritem')->getCollection()
                 ->addFieldToFilter('status', true)
                 ->addFieldToFilter('banner_id', $model->getBannerId())
                 ->setOrder('banner_order','ASC');
+            $pages = $banner_items->setPageSize ( $limit )->getLastPageNumber ();
+            if ($page <= $pages) {
+                $banner_items->setCurPage($page);
+                $banner_items->setPageSize($limit);
+            }else{
+                $banner_items = array();
+            }
             $bannerList = array();
             foreach ($banner_items as $banner_item) {
                 $type = 0;
