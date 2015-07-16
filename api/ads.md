@@ -11,11 +11,13 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 **_Paramers_**
 
 * `identifier` - 要获取的广告内容
+* `page` - 页数
+* `limit` - 每页限制商品数量
 
 **_Examples_**
 
 ```js
-    /mobileapi/banner/getbanner?identifier=rolling
+    /mobileapi/banner/getbanner?identifier=rolling&limit=2&page=3
 ```
 
 **_Response_**
@@ -84,11 +86,13 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 **_Paramers_**
 
 * `identifier` - 要获取的广告内容
+* `page` - 页数
+* `limit` - 每页限制商品数量
 
 **_Examples_**
 
 ```js
-    /mobileapi/banner/getbanner?identifier=recommend
+    /mobileapi/banner/getbanner?identifier=recommend&limit=2&page=3
 ```
 
 **_Response_**
@@ -155,11 +159,13 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 **_Paramers_**
 
 * `identifier` - 要获取的广告内容
+* `page` - 页数
+* `limit` - 每页限制商品数量
 
 **_Examples_**
 
 ```js
-    /mobileapi/banner/getbanner?identifier=magnet
+    /mobileapi/banner/getbanner?identifier=magnet&limit=2&page=3
 ```
 
 **_Response_**
@@ -228,11 +234,13 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 **_Paramers_**
 
 * `identifier` - 要获取的广告内容
+* `page` - 页数
+* `limit` - 每页限制商品数量
 
 **_Examples_**
 
 ```js
-    /mobileapi/banner/getbanner?identifier=static
+    /mobileapi/banner/getbanner?identifier=static&limit=2&page=3
 ```
 
 **_Response_**
@@ -301,11 +309,13 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 **_Paramers_**
 
 * `identifier` - 要获取的广告内容
+* `page` - 页数
+* `limit` - 每页限制商品数量
 
 **_Examples_**
 
 ```js
-    /mobileapi/banner/getbanner?identifier=other_visit
+    /mobileapi/banner/getbanner?identifier=other_visit&limit=2&page=3
 ```
 
 **_Response_**
@@ -374,11 +384,13 @@ type类型的意思： 1(跳转到页面) 2(单个商品) 3(商品列表)
 **_Paramers_**
 
 * `identifier` - 要获取的广告内容
+* `page` - 页数
+* `limit` - 每页限制商品数量
 
 **_Examples_**
 
 ```js
-    /mobileapi/banner/getbanner?identifier=your_visits
+    /mobileapi/banner/getbanner?identifier=your_visits&limit=2&page=3
 ```
 
 **_Response_**

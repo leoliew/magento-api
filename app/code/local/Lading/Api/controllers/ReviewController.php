@@ -12,7 +12,7 @@
 class Lading_Api_ReviewController extends Mage_Core_Controller_Front_Action{
 
 
-    
+
     /**
      * Submit new review action
      *
@@ -99,7 +99,7 @@ class Lading_Api_ReviewController extends Mage_Core_Controller_Front_Action{
         foreach ($collection->getItems() as $review) {
             $summary = $rate->getReviewSummary($review->getId());
             if ($summary->getCount() > 0) {
-                $rating = round($summary->getSum() / $summary->getCount() / 20);
+                $rating = round($summary->getSum() / $summary->getCount());
             } else {
                 $rating = 0;
             }

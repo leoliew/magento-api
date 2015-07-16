@@ -149,14 +149,16 @@
 
 **`GET` `/mobileapi/cart/update`**
 
-更新购物车，需要带`cookies`.
+更新购物车，POST例子 cart[3391][qty]，其中'3391'为购物车里的ID,可以发送多条数据,需要带`cookies`.
 
 **_Paramers_**
 
-* `cart_item_id` - 购物车id
-* `qty` - 商品数量
-    
+* `null`
+ 
+**_Form_**
 
+* `cart[3391][qty]` - 购物车数量
+   
 **_Examples_**
 
 ```js

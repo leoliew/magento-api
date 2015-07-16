@@ -136,7 +136,7 @@
 **_Examples_**
 
 ```js
-/mobileapi/review/post
+/mobileapi/review/post?product_id=421
     Form:  nickname=leoo
            title=haha
            detail=abcdefghi
