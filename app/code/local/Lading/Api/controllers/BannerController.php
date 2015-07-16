@@ -77,10 +77,86 @@ class Lading_Api_BannerController extends Mage_Core_Controller_Front_Action {
     }
 
 
+
+
+    /**
+     * get website info
+     */
+    public function getItemListByBannerAction() {
+        $baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
+        $currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
+        $store_id = Mage::app()->getStore()->getId();
+        $identifier  = Mage::app ()->getRequest ()->getParam('identifier');
+        $page = ($this->getRequest ()->getParam ( 'page' )) ? ($this->getRequest ()->getParam ( 'page' )) : 1;
+        $limit = ($this->getRequest ()->getParam ( 'limit' )) ? ($this->getRequest ()->getParam ( 'limit' )) : 5;
+        $model  = Mage::getModel('easybanner/banner')->load($identifier,'identifier');
+        if ($model->getId()) {
+            $banner_items = Mage::getModel('easybanner/banneritem')->getCollection()
+                ->addFieldToFilter('status', true)
+                ->addFieldToFilter('banner_id', $model->getBannerId())
+                ->setOrder('banner_order','ASC');
+            $pages = $banner_items->setPageSize ( $limit )->getLastPageNumber ();
+            if ($page <= $pages) {
+                $banner_items->setCurPage($page);
+                $banner_items->setPageSize($limit);
+            }else{
+                $banner_items = array();
+            }
+            $banner_item_list = array();
+            foreach ($banner_items as $banner_item) {
+                $type = 0;
+                if($banner_item->getContent() && strlen($banner_item->getContent()>0)){
+                    $type = 2;
+                }
+                if($type == 2){
+                    $product = Mage::getModel ( "catalog/product" )->load ($banner_item->getContent());
+                    $summaryData = Mage::getModel('review/review_summary')->setStoreId($store_id) ->load($product->getId());
+                    $price =($product->getSpecialPrice()) == null ? ($product->getPrice()) : ($product->getSpecialPrice());
+                    $regular_price_with_tax = $product->getPrice();
+                    $final_price_with_tax = $product->getSpecialPrice();
+                    $temp_product = array(
+                        'entity_id' => $product->getId(),
+                        'sku' => $product->getSku(),
+                        'name' => $product->getName(),
+                        'rating_summary' => $summaryData->getRatingSummary(),
+                        'reviews_count' => $summaryData->getReviewsCount(),
+                        'news_from_date' => $product->getNewsFromDate (),
+                        'news_to_date' => $product->getNewsToDate(),
+                        'special_from_date' => $product->getSpecialFromDate(),
+                        'special_to_date' => $product->getSpecialToDate(),
+                        'image_url' => $product->getImageUrl(),
+                        'url_key' => $product->getProductUrl(),
+                        'price' =>  number_format(Mage::helper('directory')->currencyConvert($price, $baseCurrency, $currentCurrency), 2, '.', '' ),
+                        'regular_price_with_tax' => number_format(Mage::helper('directory')->currencyConvert($regular_price_with_tax, $baseCurrency, $currentCurrency), 2, '.', '' ),
+                        'final_price_with_tax' => number_format(Mage::helper('directory')->currencyConvert($final_price_with_tax, $baseCurrency, $currentCurrency), 2, '.', '' ),
+                        'symbol' => Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(),
+                        'stock_level' => (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty()
+                    );
+                    array_push($banner_item_list,$temp_product);
+                }
+            }
+            echo json_encode(array(
+                'code'=>0,
+                'msg'=>'get item list success!',
+                'model'=> $banner_item_list
+            ));
+        }else{
+            echo json_encode ( array (
+                'code'=>1,
+                'msg'=>'please send banner identifier!',
+                'model'=>array ()
+            ));
+        }
+    }
+
+
+
+
+
     /**
      * get item by banner
      */
-    public function getItemByBannerAction() {
+    public function getItemsByBannerItemAction() {
         $baseCurrency = Mage::app ()->getStore ()->getBaseCurrency ()->getCode ();
         $currentCurrency = Mage::app ()->getStore ()->getCurrentCurrencyCode ();
         $store_id = Mage::app()->getStore()->getId();
