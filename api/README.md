@@ -125,6 +125,6 @@
 
 
 ### 静态页面 (以下为静态页面的地址)
-* [`法律-隐私声明`](域名+/media/mobile/private.html)
-* [`法律-条款`](域名+/media/mobile/clause.html)
+* [`法律-隐私声明`](https://github.com/leoliew/magento-api/tree/master/api/static.md#index)
+* [`法律-条款`](https://github.com/leoliew/magento-api/tree/master/api/static.md#index)
 
