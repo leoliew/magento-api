@@ -15,7 +15,6 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
      */
     public function getOrderById($order_id) {
         $order = Mage::getModel("sales/order")->loadByIncrementId($order_id);
-        $products_model = Mage::getModel('mobile/products');
         $items = array();
         foreach($order->getAllVisibleItems() as $item){
             $temp_items = array(
@@ -62,9 +61,9 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
             'pay_method' => $payment,
             'order_currency' => $order->getOrderCurrency()->getData(),
             'symbol' => Mage::app()->getLocale()->currency($currency_code)->getSymbol(),
-            'subtotal' => $order->getData()['subtotal'],
-            'shipping_amount' => $order->getData()['shipping_amount'],
-            'total_due' => $order->getTotalDue(),
+            'subtotal' => number_format($order->getData()['subtotal'], 2, '.', '' ),
+            'shipping_amount' =>  number_format($order->getData()['shipping_amount'], 2, '.', '' ),
+            'total_due' => number_format($order->getTotalDue(), 2, '.', '' ),
             'coupon' =>  Mage::getModel('mobile/checkout')->getCouponByCode($order->getCouponCode()),
             'items' => $items
         );
