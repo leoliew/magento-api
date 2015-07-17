@@ -123,3 +123,8 @@
 * [`设置默认货币`](https://github.com/leoliew/magento-api/tree/master/api/currency.md#setCurrency)
 * [`获取当前设置的货币`](https://github.com/leoliew/magento-api/tree/master/api/currency.md#getCurrency)
 
+
+### 静态页面 (以下为静态页面的地址)
+* [`法律-隐私声明`](域名+/media/mobile/private.html)
+* [`法律-条款`](域名+/media/mobile/clause.html)
+
