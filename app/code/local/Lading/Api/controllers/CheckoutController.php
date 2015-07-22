@@ -313,7 +313,7 @@ class Lading_Api_CheckoutController extends Mage_Core_Controller_Front_Action{
         $orderReviewArr['address'] = Mage::getModel('mobile/checkout')->getAddressByQuote($quote);
 //        $orderReviewArr['selected_shipping_method_id'] = $quote->getShippingAddress()->getShippingMethod();
         $orderReviewArr['subtotal'] = $quote->getShippingAddress()->getSubtotal();
-        $orderReviewArr['base_discount_amount'] = $quote->getShippingAddress()->getBaseDiscountAmount();
+        $orderReviewArr['base_discount_amount'] = number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($quote->getShippingAddress()->getBaseDiscountAmount()),2,'.','');
         $orderReviewArr['grand_total'] = $quote->getShippingAddress()->getGrandTotal();
         $orderReviewArr['shipping_method'] = Mage::getModel('mobile/checkout')->getShippingMethodByQuote($quote);
         $orderReviewArr['symbol'] = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
