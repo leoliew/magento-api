@@ -272,6 +272,7 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 			'discount' => $discount,
 			'tax' => $tax,
 			'coupon_code' => $oldCouponCode,
+			'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(),
 			'coupon_rule' => array(
 				'rule_id' => $oRule->getData()['rule_id'],
 				'name' => $oRule->getData()['name'],

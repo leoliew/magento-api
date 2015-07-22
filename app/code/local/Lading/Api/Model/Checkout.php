@@ -204,7 +204,7 @@ class Lading_Api_Model_Checkout extends Lading_Api_Model_Abstract {
      * @return array
      */
     public function getCouponByQuote($quote){
-        $coupon =  array();
+        $coupon =   (object)array();
         $coupon_code = $quote->getCouponCode();
         if($coupon_code){
             $oCoupon = Mage::getModel ( 'salesrule/coupon' )->load ( $coupon_code, 'code' );
