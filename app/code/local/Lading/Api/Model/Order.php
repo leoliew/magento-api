@@ -50,7 +50,7 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
             'full_tax_info' => $order->getFullTaxInfo(),
             'customer_name' => $order->getCustomerName(),
             'shipping_address_name' => ($order->getShippingAddress()?$order->getShippingAddress()->getName():null),
-            'grand_total' => $order->getGrandTotal(),
+            'grand_total' => number_format($order->getGrandTotal(), 2, '.', '' ),
             'status_label' => $order->getStatusLabel(),
             'shipping_method' => $order->getShippingMethod(),
             'can_ship' => $order->canShip(),
