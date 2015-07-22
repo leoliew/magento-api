@@ -269,7 +269,7 @@ class Lading_Api_CartController extends Mage_Core_Controller_Front_Action {
 		return array (
 			'subtotal' => $subtotal,
 			'grand_total' => $grand_total,
-			'discount' => $discount,
+			'discount' => number_format(Mage::getModel('mobile/currency')->getCurrencyPrice($discount),2,'.',''),
 			'tax' => $tax,
 			'coupon_code' => $oldCouponCode,
 			'symbol'=> Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(),
