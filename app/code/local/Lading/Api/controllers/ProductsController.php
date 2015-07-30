@@ -133,6 +133,10 @@ class Lading_Api_ProductsController extends Mage_Core_Controller_Front_Action {
         $product_detail['final_price_with_tax'] = number_format ( Mage::helper ( 'directory' )->currencyConvert ( $product->getSpecialPrice (), $baseCurrency, $currentCurrency ), 2, '.', '' );
 //			'description' => nl2br ( $product->getDescription()),
         $product_detail['short_description'] = $product->getShortDescription();
+//        $product_detail['description'] = $product->getDescription();
+
+        $product_detail['description'] = $product->getDescription();                   //add by wayne    /*long description*/
+        $product_detail['additional'] = $products_model->getAdditionalFront($product); //add by wayne    /*additional information Visible on Product View Page on Front-end*/
         $product_detail['symbol'] = Mage::app ()->getLocale ()->currency ( Mage::app ()->getStore ()->getCurrentCurrencyCode () )->getSymbol ();
         $product_detail['options'] = $options;
         $product_detail['mediaGallery'] = $mediaGallery;
