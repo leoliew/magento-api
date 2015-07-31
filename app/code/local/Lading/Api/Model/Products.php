@@ -43,6 +43,9 @@ class Lading_Api_Model_Products extends Lading_Api_Model_Abstract {
                                 $temp_collection['labels'] = $exist_collection['labels'];
                                 array_push($exist_collection['index_key'],$value['value_index']);
                                 $temp_collection['index_key'] = $exist_collection['index_key'];
+
+                                $temp_image_url = Mage::getModel('catalog/product')->load((int) $temp_collection['id'])->getImageUrl ();  //add by wayne
+                                $temp_collection['child_image_url'] = $temp_image_url;                                                    //add by wayne
                                 unset($collection[$key]);
                                 break;
                             }
@@ -58,15 +61,20 @@ class Lading_Api_Model_Products extends Lading_Api_Model_Abstract {
             }
         }
         $exists_list = array();
+        $image_list = array();          //add by wayne
         foreach($collection as $after_collection){
             $temp_item = array();
+            $temp_image_item = $after_collection['index_key'];   //add by wayne
+            array_push($temp_image_item,$after_collection['child_image_url']);  //add by wayne
             foreach($after_collection['index_key'] as $index_key){
                 array_push($temp_item,$index_key);
                 sort($temp_item);
             }
+            array_push($image_list,$temp_image_item);    //add by wayne
             array_push($exists_list,$temp_item);
         }
         $products['collection'] = $exists_list;
+        $products['child_image_url'] = $image_list;      //add by wayne
         return $products;
     }
 
@@ -238,5 +246,39 @@ class Lading_Api_Model_Products extends Lading_Api_Model_Abstract {
         return $price;
     }
 
+    /**
+     * get additional information Visible on Product View Page on Front-end
+     * @param $product
+     * @return array
+     * add by wayne
+     */
+    public function getAdditionalFront($t_product)
+    {
+        $data = array();
+        $product = $t_product;
+        $attributes = $product->getAttributes();
+        foreach ($attributes as $attribute) {
+            if ($attribute->getIsVisibleOnFront()) {
+                $value = $attribute->getFrontend()->getValue($product);
+
+                if (!$product->hasData($attribute->getAttributeCode())) {
+                    $value = Mage::helper('catalog')->__('N/A');
+                } elseif ((string)$value == '') {
+                    $value = Mage::helper('catalog')->__('No');
+                } elseif ($attribute->getFrontendInput() == 'price' && is_string($value)) {
+                    $value = Mage::app()->getStore()->convertPrice($value, true);
+                }
+
+                if (is_string($value) && strlen($value)) {
+                    $data[] = array(
+                        $attribute->getStoreLabel(),
+                        $value
+                    );
+                }
+            }
+        }
+        return $data;
+    }
+    /********************end add************************************************/
 
 }

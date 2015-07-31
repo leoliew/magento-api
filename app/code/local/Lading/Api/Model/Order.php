@@ -63,6 +63,7 @@ class Lading_Api_Model_Order extends Lading_Api_Model_Abstract {
             'symbol' => Mage::app()->getLocale()->currency($currency_code)->getSymbol(),
             'subtotal' => number_format($order->getData()['subtotal'], 2, '.', '' ),
             'shipping_amount' =>  number_format($order->getData()['shipping_amount'], 2, '.', '' ),
+            'base_discount_amount' => number_format($order->getBaseDiscountAmount(), 2, '.', '' ),         //add by wayne
             'total_due' => number_format($order->getTotalDue(), 2, '.', '' ),
             'coupon' =>  Mage::getModel('mobile/checkout')->getCouponByCode($order->getCouponCode()),
             'items' => $items

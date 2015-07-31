@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <style>
+            html{
+                width: 100%;
+                height: 100%;
+                color: #777;
+            }
+            header{
+                width: 100%;
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #08c;
+            }
+            h2{
+                width: 100%;
+                text-align: center;
+                font-size: 1.2rem;
+                font-weight: normal;
+            }
+            p{
+                width: 100%;
+                font-size: 0.9rem;
+                margin: 10px 0;
+            }
+            div a{
+                color: #007cbf;
+                font-size: 0.8rem;
+                text-decoration: none;
+            }
+            img{
+                max-width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>Cómo comprar?</header>
+        <div><a href="../ayuda.html">← Todos los artículos</a><div>
+        <div>
+            <p>El proceso de compra es mucho más sencillo de lo que te imaginas!</br></p>
+            <p>1. Navegue por toda nuestra selección de productos y vea el detalle del producto. Tiene un producto específico en mente? Intente utilizar la búsqueda para localizar el elemento. Al seleccionar el menú Categorías, se despliega un listado de Categorías de Productos.</br></p>
+            <img src="https://latin.uservoice.com/assets/81175116/01.png">
+            <p>Por el debajo hay un listado de las Categorías de Productos, seleccione uno y le lleva a la página de Catálogo (listado de productos con foto). Si selecciona 1 producto,podrá ver el detalle en la Página de Producto.</br></p>
+            <p>Vista del menú:</br></p>
+            <img src="https://latin.uservoice.com/assets/81175167/menu.jpg">
+            <p>Vista de catálogo con foto:</br></p>
+            <img src="https://latin.uservoice.com/assets/81175125/03.png">
+            <p>2. ¿Encontró el producto que usted quiere comprar? Perfecto, ahora revise los detalles del producto como color, etc. Seleccione la cantidad de piezas que desea y haga clic en el botón "Lo quiero" y este producto se agregará automáticamente a su Carrito de Compras (Cesta de compras).</br></p>
+            <img src="https://latin.uservoice.com/assets/81175461/002.jpg">
+            <p>3. ¿Quieres seguir comprando? Haz clic en el botón "Continuar Comprando" y se devolverá a la última página que estaba viendo o si quiere puede ir al menú Catálogo y seleccione cualquier categoría de producto.</br></p>
+            <p>4. ¿Listos para pagar? Revise la descripción del producto, cantidad y precio. Usted puede cambiar la cantidad y haga clic en el botón "Actualizar carrito de compras". Si desea quitar el producto, haga clic en el ícono de "X" en la extrema izquierda. </br></p>
+            <p>Para pagar, haga clic en el botón "Continuar con la compra".</br></p>
+            <img src="https://latin.uservoice.com/assets/81175602/13.png">
+            <p>5. Si ya se ha registrado con nosotros, usted puede ingresar a su cuenta proporcionando su correo electrónico y contraseña. Seleccione o introduzca la dirección y la forma de pago. Haga clic en el botón "Confirmar Pedido".</br></p>
+            <p>6. Si no, usted puede crear una cuenta para uso futuro. Primer paso, proporcionar información personal y dirección de entrega. El número de teléfono es muy importante para que podamos comunicarnos con usted. Haga clic en el botón "Continuar Pedido".</br></p>
+            <p>7. Si necesita añadir alguna instrucción específica, utilice el espacio "Comentario".</br></p>
+            <p>8. Hay 2 opciones de pago:</br></p>
+            <p>Payu: Seleccione esta opción si desea pagar con tarjeta de crédito / débito en línea. Usted será dirigido a la página de procesamiento de pago. Una vez que recibamos el pedido y el pago, estaremos enviando una confirmación de su orden. Luego usted recibirá la notificación de envío.</br></p>
+            <p>Davivienda: Seleccione esta opción si desea hacer transferencia bancaria. Cuando haga clic en el botón "Davivienda", aparecerá nuestra información para realizar la transferencia. Después de completar la transferencia por favor envíe un correo a pagos@comprame.com con la prueba de transferencia y en el título escriba su número de orden (que empieza por 100). Usted recibirá un correo electrónico con la información su pedido. También podrá revisar el estado de su pedido entrando en "Mi cuenta".</br></p>
+            <p>Es muy fácil y seguro comprar en línea con nosotros. ¡Que tengan una experiencia fabulosa!</br></p>
+        </div>
+    </body>
+    <script>
+        (function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 16 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+</html>

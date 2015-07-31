@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <style>
+            html{
+                width: 100%;
+                height: 100%;
+                color: #777;
+            }
+            header{
+                width: 100%;
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #08c;
+            }
+            h2{
+                width: 100%;
+                text-align: center;
+                font-size: 1.2rem;
+                font-weight: normal;
+            }
+            p{
+                width: 100%;
+                font-size: 0.9rem;
+                margin: 10px 0;
+            }
+            div a{
+                color: #007cbf;
+                font-size: 0.8rem;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <header>Dónde están ubicados?</header>
+        <div><a href="../ayuda.html">← Todos los artículos</a><div>
+        <div>
+            <p>Latin Internet Technology es una compañía con más de 40 empleados en China y Colombia. Contamos con 1 oficina y 2 bodegas propias.</br></p>
+            <p>Oficina principal: Oficina 916, Edificio Yuedian, Calle Tianhedong 2, Guangzhou, China. Tel: +86-20-87548759 ext: 811 para español.</br></p>
+            <p>Bodega regional: Calle 27 # 8A-65, Parque Industrial Perú, Funza, Cundinamarca, Colombia, Sudamérica.</br></p>
+        </div>
+    </body>
+    <script>
+        (function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 16 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+</html>

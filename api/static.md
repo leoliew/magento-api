@@ -7,5 +7,6 @@
 
 * `域名+/media/mobile/private.html` - 法律-隐私声明
 * `域名+/media/mobile/clause.html` - 法律-条款
+* `域名+/media/mobile/ayuda.html` - 帮助信息
 
 ---------------------------------------

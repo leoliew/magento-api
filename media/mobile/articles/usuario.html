@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <style>
+            html{
+                width: 100%;
+                height: 100%;
+                color: #777;
+            }
+            header{
+                width: 100%;
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #08c;
+            }
+            h2{
+                width: 100%;
+                text-align: center;
+                font-size: 1.2rem;
+                font-weight: normal;
+            }
+            p{
+                width: 100%;
+                font-size: 0.9rem;
+                margin: 10px 0;
+            }
+            div a{
+                color: #007cbf;
+                font-size: 0.8rem;
+                text-decoration: none;
+            }
+            img{
+                max-width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>Cómo entro a mi cuenta de usuario?</header>
+        <div><a href="../ayuda.html">← Todos los artículos</a><div>
+        <div>
+            <p>Puede ingresar a su cuenta de usuario en el siguiente </br></p>
+            <p>enlace: https://www.comprame.com/index.php/customer/account/login/</br></p>
+            <p>El nombre de usuario es su correo electrónico. Si no recuerda su clave por favor enviar un correo a: </br></p>
+            <p>ayuda@comprame.com</br></p>
+        </div>
+    </body>
+    <script>
+        (function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 16 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+</html>
