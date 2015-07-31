@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <style>
+            html{
+                width: 100%;
+                height: 100%;
+                color: #777;
+            }
+            header{
+                width: 100%;
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #08c;
+            }
+            h2{
+                width: 100%;
+                text-align: center;
+                font-size: 1.2rem;
+                font-weight: normal;
+            }
+            p{
+                width: 100%;
+                font-size: 0.9rem;
+                margin: 10px 0;
+            }
+            div a{
+                color: #007cbf;
+                font-size: 0.8rem;
+                text-decoration: none;
+            }
+            img{
+                max-width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>Cómo Pagar?</header>
+        <div><a href="../ayuda.html">← Pagos</a><div>
+        <div>
+            <p>Recomendamos escoger PAYU y luego seleccionar el botón PSE.</br></p>
+            <p>A continuación los pasos en detalle:</br></p>
+            <p>Primero verifique con su banco si su cuenta ya cuenta con la opción de Banca en Línea. De ser positivo siga las siguientes instrucciones: </br></p>
+            <p>En la página de confirmación seleccione PAYU</br></p>
+            <img src="https://latin.uservoice.com/assets/81069732/01.jpg">
+            <img src="https://latin.uservoice.com/assets/81069933/02.jpg">
+            <p>Luego será redirigido a una página donde tiene que rellenar sus datos personales.</br></p>
+            <img src="https://latin.uservoice.com/assets/81069948/03.jpg">
+            <p>Después de completar los datos seleccione Pagar. Según el banco que escoja el sistema lo redirecciona a la página de Banca en Línea de su Banco.</br></p>
+            <img src="https://latin.uservoice.com/assets/81069966/04.jpg">
+            <p>Después de hacer clic en Aceptar se mostrará la página de confirmación.</br></p>
+            <img src="https://latin.uservoice.com/assets/81070020/05.jpg">
+            <p>Gracias por su tiempo. Cualquier pregunta adicional por favor contacte a nuestro personal de Servicio al Cliente a través del correo electrónico: ayuda@comprame.com</br></p>
+        </div>
+    </body>
+    <script>
+        (function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 16 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+</html>

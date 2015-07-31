@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <style>
+            html{
+                width: 100%;
+                height: 100%;
+                color: #777;
+            }
+            header{
+                width: 100%;
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #08c;
+            }
+            h2{
+                width: 100%;
+                text-align: center;
+                font-size: 1.2rem;
+                font-weight: normal;
+            }
+            p{
+                width: 100%;
+                font-size: 0.9rem;
+                margin: 10px 0;
+            }
+            div a{
+                color: #007cbf;
+                font-size: 0.8rem;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <header>Cuál es el tiempo de entrega?</header>
+        <div><a href="../ayuda.html">← Envíos</a><div>
+        <div>
+            <p>Estos pedidos son verificados manualmente. Después de confirmar su pago procedemos a coordinando el envío. Sin embargo el estado del pedido no cambiará. </br></p>
+        </div>
+    </body>
+    <script>
+        (function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 16 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+</html>

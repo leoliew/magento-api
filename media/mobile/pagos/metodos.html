@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <style>
+            html{
+                width: 100%;
+                height: 100%;
+                color: #777;
+            }
+            header{
+                width: 100%;
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #08c;
+            }
+            h2{
+                width: 100%;
+                text-align: center;
+                font-size: 1.2rem;
+                font-weight: normal;
+            }
+            p{
+                width: 100%;
+                font-size: 0.9rem;
+                margin: 10px 0;
+            }
+            div a{
+                color: #007cbf;
+                font-size: 0.8rem;
+                text-decoration: none;
+            }
+            img{
+                max-width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>Qué métodos de pago aceptan?</header>
+        <div><a href="../ayuda.html">← Pagos</a><div>
+        <div>
+            <p>COLOMBIA:</br></p>
+            <p>Aceptamos todas las tarjetas de crédito y débito en Colombia a través de la plataforma de pago PAYU. Además esta plataforma también acepta pagos en efectivo en kioskos BALOTO o EFECTY.</br></p>
+            <img src="http://www.payulatam.com/logos/logo.php?l=133&c=5562dcd318331" alt="PayU Latam" border="0">
+            <p>También puede seleccionar DAVIVIENDA para pagos que no sean en línea realizando un giro a nuestra cuenta corporativa en este banco.</br></p>
+            <img src="https://latin.uservoice.com/assets/81070464/davivienda.jpg">
+            <p>Por último aceptamos PAYPAL, la plataforma de pagos más grande y segura del Mundo donde puede hacer pagos en dólares a través de su tarjeta de crédito.</br></p>
+            <img src="https://latin.uservoice.com/assets/81070446/paypal.jpg">
+            <p>MEXICO:</br></p>
+            <p>Sólo aceptamos pagos a través de PAYPAL.</br></p>
+        </div>
+    </body>
+    <script>
+        (function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 16 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+</html>
