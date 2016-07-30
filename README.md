@@ -33,8 +33,8 @@ or download package manually:
 
 ## API 
 
-* see the english documentation [here](https://github.com/leoliew/magento-api/tree/master/api/en/#api-document)
-* see the chinese documentation [here](https://github.com/leoliew/magento-api/tree/master/api/cn/#api-文档)
+* English documentation [here](https://github.com/leoliew/magento-api/tree/master/api/en/#api-document)
+* Chinese documentation [here](https://github.com/leoliew/magento-api/tree/master/api/cn/#api-文档)
 
 
 License
